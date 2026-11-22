@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trao đổi nước và chất dinh dưỡng ở thực vật – KHTN 7</title>
+  <style>
+    /* =====================================================================
+       BIẾN MÀU SẮC & GIAO DIỆN ĐỎ - TRẮNG SÁNG RÕ (Kèm nút chuyển Sáng/Tối)
+       ===================================================================== */
+    :root {
+      --bg: #fff8f8;
+      --surface: #ffffff;
+      --surface-alt: #fef2f2;
+      --text: #1f1212;
+      --text-muted: #6b4c4c;
+      --border: #f3c6c6;
+      --primary: #dc2626;
+      --primary-hover: #b91c1c;
+      --primary-soft: #fee2e2;
+      --water: #0077ff;
+      --water-soft: #e0f2fe;
+      --mineral: #d97706;
+      --mineral-soft: #fef3c7;
+      --phloem: #be123c;
+      --phloem-soft: #ffe4e6;
+      --ok: #15803d;
+      --ok-bg: #dcfce7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --svg-bg: #ffffff;
+      --shadow: 0 6px 20px rgba(185, 28, 28, 0.08);
+      --radius: 16px;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #180f10;
+      --surface: #241618;
+      --surface-alt: #321e21;
+      --text: #fff1f2;
+      --text-muted: #d6b4b8;
+      --border: #5c3238;
+      --primary: #ef4444;
+      --primary-hover: #dc2626;
+      --primary-soft: #451a1f;
+      --water: #38bdf8;
+      --water-soft: #0c2e45;
+      --mineral: #f59e0b;
+      --mineral-soft: #3b280a;
+      --phloem: #fb7185;
+      --phloem-soft: #4c1724;
+      --ok: #4ade80;
+      --ok-bg: #123622;
+      --danger: #f87171;
+      --danger-bg: #451515;
+      --svg-bg: #1e1314;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: clamp(15px, 1.25vw, 18px);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea, svg, text {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Tahoma, Arial, sans-serif;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 8px 0;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 16px;
+      margin-bottom: 6px;
+    }
+
+    ul li::before {
+      content: "-";
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* =====================================================================
+       HEADER & THANH CHUYỂN 3 TAB CHÍNH
+       ===================================================================== */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      max-width: 1280px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+
+    .brand-badge {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.85em;
+      white-space: nowrap;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      line-height: 1.25;
+    }
+
+    .tab-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .tab-bar { grid-template-columns: 1fr; }
+    }
+
+    .tab-btn {
+      min-height: 48px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.98em;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.15s, border-color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover { border-color: var(--primary); }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28);
+    }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .tab-panel { display: none; animation: fadeIn 0.22s ease; }
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =====================================================================
+       TIÊU ĐỀ TAB, BỐ CỤC MÔ PHỎNG & HỘP QUAN SÁT
+       ===================================================================== */
+    .panel-head {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h2 {
+      margin: 0 0 4px;
+      font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+      color: var(--primary);
+    }
+
+    .guiding-q { margin: 0; font-size: 1em; font-weight: 500; }
+    .guiding-q strong { color: var(--mineral); }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(290px, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 920px) {
+      .sim-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .svg-stage {
+      width: 100%;
+      background: var(--svg-bg);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .svg-stage svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+    }
+
+    /* Nút phóng to gắn trên từng khung mô phỏng & chế độ toàn màn hình */
+    .stage-zoom-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      min-height: 38px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.85em;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+    }
+
+    .stage-zoom-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    :root[data-theme="dark"] .stage-zoom-btn {
+      background: rgba(36, 22, 24, 0.92);
+      color: #fecdd3;
+    }
+
+    .svg-stage.is-expanded {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--bg);
+      border: none;
+      border-radius: 0;
+      padding: 72px 18px 20px;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+
+    .svg-stage.is-expanded .stage-zoom-btn {
+      display: none;
+    }
+
+    .svg-stage.is-expanded svg {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: calc(100vh - 96px);
+      background: var(--svg-bg);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      transform-origin: center center;
+      transition: transform 0.16s ease;
+    }
+
+    .zoom-toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1001;
+      background: var(--surface);
+      border-bottom: 2px solid var(--primary);
+      padding: 10px 16px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+    }
+
+    .zoom-toolbar.active {
+      display: flex;
+    }
+
+    .zoom-toolbar-title {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1em;
+    }
+
+    .zoom-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sim-label-group {
+      transition: opacity 0.2s ease;
+    }
+
+    .svg-stage.hide-sim-labels .sim-label-group {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    .obs-box {
+      margin-top: 16px;
+      background: var(--primary-soft);
+      border: 2px solid var(--primary);
+      border-left-width: 8px;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+    }
+
+    .obs-box h3 { margin: 0 0 6px; font-size: 1.08em; color: var(--primary); }
+    .obs-box p { margin: 4px 0; }
+
+    /* =====================================================================
+       NÚT BẤM, THANH TRƯỢT, CHÚ GIẢI
+       ===================================================================== */
+    .btn {
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.92em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s, background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover { border-color: var(--primary); }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(220, 38, 38, 0.24);
+    }
+
+    .btn-reset {
+      background: var(--surface);
+      border-color: var(--danger);
+      color: var(--danger);
+      white-space: nowrap;
+    }
+    .btn-reset:hover { background: var(--danger-bg); }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .control-group {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .val-pill {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.88em;
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .meter-bar-bg {
+      height: 20px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .meter-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.2s ease;
+    }
+
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      padding: 10px 14px;
+      margin-top: 10px;
+      background: var(--surface-alt);
+      border-radius: 10px;
+      font-size: 0.92em;
+      font-weight: 700;
+    }
+
+    .step-list { display: grid; gap: 7px; margin: 10px 0; }
+
+    .step-item {
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--surface-alt);
+      cursor: pointer;
+      font-size: 0.94em;
+      transition: all 0.15s;
+    }
+
+    .step-item.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      font-weight: 700;
+    }
+
+    .callout-text {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Tahoma, Arial, sans-serif;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px 16px 28px;
+      font-size: 0.9em;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <!-- =====================================================================
+       HEADER & THANH CHUYỂN 3 TAB CHÍNH
+       ===================================================================== -->
+  <div id="zoomToolbar" class="zoom-toolbar" role="region" aria-label="Thanh công cụ phóng to mô phỏng">
+    <span id="zoomToolbarTitle" class="zoom-toolbar-title">Phóng to mô phỏng</span>
+    <div class="zoom-toolbar-actions">
+      <button id="zoomToggleLabelsBtn" class="btn btn-active" type="button" title="Bật hoặc tắt nhãn và kí hiệu trên hình">🏷️ Nhãn &amp; kí hiệu: Bật</button>
+      <button id="zoomOutBtn" class="btn" type="button" title="Thu nhỏ tỷ lệ">➖</button>
+      <span id="zoomPercentVal" class="val-pill">100%</span>
+      <button id="zoomInBtn" class="btn" type="button" title="Phóng to thêm">➕</button>
+      <button id="zoomResetBtn" class="btn" type="button">100%</button>
+      <button id="zoomCloseBtn" class="btn btn-primary" type="button">✕ Thu nhỏ (Esc)</button>
+    </div>
+  </div>
+
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand">
+        <span class="brand-badge">KHTN 7 - Kết nối tri thức</span>
+        <h1>Trao đổi nước và chất dinh dưỡng ở thực vật</h1>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="fullscreenSimBtn" class="btn btn-primary" type="button" title="Phóng to mô phỏng đang xem">⛶ Phóng to mô phỏng</button>
+        <button id="themeToggle" class="btn" type="button" title="Chuyển chế độ Sáng / Tối">🌓 Sáng / Tối</button>
+      </div>
+    </div>
+
+    <nav class="tab-bar" role="tablist" aria-label="Chọn mô phỏng bài học">
+      <button class="tab-btn active" data-tab="tab1" role="tab" aria-selected="true" type="button">🌱 1. Rễ hấp thụ</button>
+      <button class="tab-btn" data-tab="tab2" role="tab" aria-selected="false" type="button">🌿 2. Vận chuyển (Mạch)</button>
+      <button class="tab-btn" data-tab="tab3" role="tab" aria-selected="false" type="button">💨 3. Khí khổng &amp; Thoát hơi nước</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================================================================
+         TAB 1: HẤP THỤ NƯỚC VÀ CHẤT KHOÁNG Ở RỄ (Hình 30.1)
+         =================================================================== -->
+    <section id="tab1" class="tab-panel active" role="tabpanel">
+      <div class="panel-head">
+        <div>
+          <h2>1. Hấp thụ nước và chất khoáng ở rễ (Hình 30.1)</h2>
+          <p class="guiding-q"><strong>Câu hỏi dẫn dắt:</strong> Nước và chất khoáng từ đất đi qua những bộ phận nào để vào mạch gỗ của rễ?</p>
+        </div>
+        <button class="btn btn-reset" id="resetTab1" type="button">↺ Đặt lại</button>
+      </div>
+
+      <div class="sim-grid">
+        <div class="card">
+          <div class="btn-row">
+            <button id="t1ViewCellBtn" class="btn btn-active" type="button">🔬 Tế bào lông hút</button>
+            <button id="t1ViewAquaticBtn" class="btn" type="button">🌊 Trường hợp đặc biệt: Cây thuỷ sinh</button>
+          </div>
+
+          <!-- GÓC CẬN CẢNH TẾ BÀO VÙNG LÔNG HÚT -->
+          <div class="svg-stage" id="t1CellStage">
+            <svg viewBox="0 0 900 540" role="img" aria-label="Cận cảnh tế bào lông hút hấp thụ nước và chất khoáng qua vỏ rễ vào mạch gỗ">
+              <defs>
+                <!-- Nền đất tự nhiên có chiều sâu -->
+                <linearGradient id="c1_soilGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#363129"/>
+                  <stop offset="65%" stop-color="#4e4638"/>
+                  <stop offset="100%" stop-color="#615745"/>
+                </linearGradient>
+                <!-- Nền trung trụ xanh lá mạ mượt 3D -->
+                <linearGradient id="c1_steleGreen" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#b7d982"/>
+                  <stop offset="45%" stop-color="#8cb357"/>
+                  <stop offset="100%" stop-color="#5d7a36"/>
+                </linearGradient>
+                <!-- Thành tế bào 3D nâu cam ấm -->
+                <linearGradient id="c1_wallGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#e3b184"/>
+                  <stop offset="50%" stop-color="#c48a5c"/>
+                  <stop offset="100%" stop-color="#965f37"/>
+                </linearGradient>
+                <!-- Lòng tế bào vỏ rễ vàng kem bóng 3D -->
+                <radialGradient id="c1_parenchymaGrad" cx="62%" cy="32%" r="72%">
+                  <stop offset="0%" stop-color="#fefce8"/>
+                  <stop offset="32%" stop-color="#fef08a"/>
+                  <stop offset="72%" stop-color="#e5c147"/>
+                  <stop offset="100%" stop-color="#a88324"/>
+                </radialGradient>
+                <!-- Nhân tế bào màu hồng 3D bóng mượt -->
+                <radialGradient id="c1_nucleusGrad" cx="34%" cy="28%" r="68%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="22%" stop-color="#fbcfe8"/>
+                  <stop offset="60%" stop-color="#db2777"/>
+                  <stop offset="100%" stop-color="#701a45"/>
+                </radialGradient>
+                <!-- Lòng tế bào nội bì trắng bạc 3D -->
+                <linearGradient id="c1_endoGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#cbd5e1"/>
+                  <stop offset="38%" stop-color="#ffffff"/>
+                  <stop offset="78%" stop-color="#f1f5f9"/>
+                  <stop offset="100%" stop-color="#94a3b8"/>
+                </linearGradient>
+                <!-- Lòng ống mạch gỗ cắt dọc 3D có ánh sáng bóng -->
+                <linearGradient id="c1_xylemCavity" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#6b4c26"/>
+                  <stop offset="28%" stop-color="#c9a56e"/>
+                  <stop offset="52%" stop-color="#ebd09e"/>
+                  <stop offset="78%" stop-color="#a37c47"/>
+                  <stop offset="100%" stop-color="#543919"/>
+                </linearGradient>
+                <!-- Các đốt ống mạch gỗ 3D bên phải -->
+                <linearGradient id="c1_xylemOuter" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#4d361b"/>
+                  <stop offset="35%" stop-color="#b5905b"/>
+                  <stop offset="62%" stop-color="#dec08e"/>
+                  <stop offset="100%" stop-color="#614624"/>
+                </linearGradient>
+                <!-- Hạt nước xanh dương 3D nổi bóng -->
+                <radialGradient id="c1_water3D" cx="35%" cy="30%" r="65%">
+                  <stop offset="0%" stop-color="#bae6fd"/>
+                  <stop offset="40%" stop-color="#0ea5e9"/>
+                  <stop offset="85%" stop-color="#0284c7"/>
+                  <stop offset="100%" stop-color="#0369a1"/>
+                </radialGradient>
+                <!-- Hạt ion khoáng cam vàng 3D nổi bóng -->
+                <radialGradient id="c1_mineral3D" cx="35%" cy="30%" r="65%">
+                  <stop offset="0%" stop-color="#fef3c7"/>
+                  <stop offset="45%" stop-color="#f59e0b"/>
+                  <stop offset="100%" stop-color="#b45309"/>
+                </radialGradient>
+                <filter id="c1_shadow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.32"/>
+                </filter>
+                <filter id="c1_innerDepth" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#3b2109" flood-opacity="0.45"/>
+                </filter>
+              </defs>
+
+              <!-- 1. MÔI TRƯỜNG ĐẤT BÊN TRÁI (SÁT THÀNH TẾ BÀO) -->
+              <rect x="0" y="0" width="398" height="540" fill="url(#c1_soilGrad)"/>
+              <!-- Các hạt đất, sỏi nhỏ và giọt nước phân bố trong đất -->
+              <g fill="#2b261f" opacity="0.45">
+                <ellipse cx="42" cy="48" rx="18" ry="11"/><ellipse cx="148" cy="56" rx="22" ry="12"/>
+                <ellipse cx="295" cy="64" rx="24" ry="13"/><ellipse cx="78" cy="296" rx="26" ry="14"/>
+                <ellipse cx="268" cy="330" rx="20" ry="11"/><ellipse cx="185" cy="452" rx="28" ry="15"/>
+                <ellipse cx="322" cy="492" rx="22" ry="12"/><ellipse cx="48" cy="482" rx="19" ry="10"/>
+              </g>
+              <g fill="url(#c1_water3D)" opacity="0.82">
+                <circle cx="48" cy="72" r="5.5"/><circle cx="118" cy="96" r="5"/><circle cx="72" cy="158" r="5.5"/>
+                <circle cx="38" cy="246" r="5.5"/><circle cx="122" cy="284" r="5"/><circle cx="64" cy="348" r="5.5"/>
+                <circle cx="95" cy="435" r="5"/><circle cx="152" cy="488" r="5.5"/><circle cx="242" cy="368" r="5"/>
+                <circle cx="275" cy="145" r="5"/><circle cx="292" cy="422" r="5.5"/><circle cx="195" cy="128" r="4.5"/>
+              </g>
+
+              <!-- 2. VÙNG TRUNG TRỤ XANH LÁ MẠ & TẤM LỖ RÂY HÌNH TỔ ONG (GIỐNG ẢNH MẪU) -->
+              <rect x="642" y="0" width="258" height="540" fill="url(#c1_steleGreen)"/>
+              <!-- Tấm rây hình tổ ong (trên & dưới) và nhân hồng nổi 3D -->
+              <g id="t1SteleDetails" opacity="0.88">
+                <!-- Mảnh ống rây trên -->
+                <path d="M 652 128 Q 684 102 716 112 Q 705 144 652 152 Z" fill="#6f8c46" stroke="#364a1e" stroke-width="1.5"/>
+                <g fill="#2b3d17">
+                  <circle cx="668" cy="132" r="3.5"/><circle cx="678" cy="124" r="3.5"/><circle cx="689" cy="119" r="3.5"/>
+                  <circle cx="678" cy="136" r="3.5"/><circle cx="690" cy="130" r="3.5"/><circle cx="701" cy="122" r="3"/>
+                </g>
+                <!-- Mảnh ống rây dưới -->
+                <path d="M 656 444 Q 692 414 726 426 Q 718 468 656 476 Z" fill="#6f8c46" stroke="#364a1e" stroke-width="1.5"/>
+                <g fill="#2b3d17">
+                  <circle cx="672" cy="448" r="4"/><circle cx="685" cy="440" r="4"/><circle cx="698" cy="434" r="4"/>
+                  <circle cx="683" cy="455" r="4"/><circle cx="696" cy="448" r="4"/><circle cx="710" cy="440" r="3.5"/>
+                  <circle cx="694" cy="462" r="3.8"/><circle cx="708" cy="454" r="3.5"/>
+                </g>
+                <!-- Bào quan / nhân hồng nổi khối ở trung trụ -->
+                <ellipse cx="692" cy="242" rx="11" ry="15" fill="url(#c1_nucleusGrad)" filter="url(#c1_shadow)"/>
+              </g>
+
+              <!-- 3. HỆ THỐNG ỐNG MẠCH GỖ 3D PHÂN ĐỐT (BÊN PHẢI) -->
+              <g id="t1XylemVessels3D">
+                <!-- Ống mạch gỗ chính bị cắt dọc lộ lòng ống 3D -->
+                <rect x="724" y="0" width="84" height="540" fill="url(#c1_xylemCavity)"/>
+                <!-- Mép thành cắt dọc 3D bên trái & bên phải của ống mạch gỗ -->
+                <rect x="720" y="0" width="9" height="540" fill="#c9a06c" stroke="#4a3114" stroke-width="1.6"/>
+                <rect x="802" y="0" width="9" height="540" fill="#c9a06c" stroke="#4a3114" stroke-width="1.6"/>
+                <!-- Khấc vách ngang tạo đốt mạch gỗ 3D chân thực -->
+                <g stroke="#4a3114" stroke-width="2.5" fill="none" opacity="0.72">
+                  <path d="M 728 96 Q 766 116 802 104"/>
+                  <path d="M 728 214 Q 766 232 802 222"/>
+                  <path d="M 728 338 Q 766 356 802 344"/>
+                  <path d="M 728 456 Q 766 474 802 464"/>
+                </g>
+                <!-- Mấu gờ nhỏ trên vách cắt -->
+                <g fill="#785226">
+                  <polygon points="729,92 738,96 729,102"/><polygon points="802,100 793,104 802,110"/>
+                  <polygon points="729,210 738,214 729,220"/><polygon points="802,218 793,222 802,228"/>
+                  <polygon points="729,334 738,338 729,344"/><polygon points="802,340 793,344 802,350"/>
+                  <polygon points="729,452 738,456 729,462"/><polygon points="802,460 793,464 802,470"/>
+                </g>
+
+                <!-- Hai cột ống mạch gỗ 3D bóng xếp đốt phía bên phải -->
+                <g stroke="#3d2912" stroke-width="2">
+                  <path d="M 811 0 L 856 0 L 856 142 Q 834 156 811 136 Z" fill="url(#c1_xylemOuter)"/>
+                  <path d="M 811 136 Q 834 156 856 142 L 856 322 Q 834 338 811 316 Z" fill="url(#c1_xylemOuter)"/>
+                  <path d="M 811 316 Q 834 338 856 322 L 856 540 L 811 540 Z" fill="url(#c1_xylemOuter)"/>
+
+                  <path d="M 856 0 L 900 0 L 900 185 Q 878 198 856 178 Z" fill="url(#c1_xylemOuter)"/>
+                  <path d="M 856 178 Q 878 198 900 185 L 900 375 Q 878 390 856 368 Z" fill="url(#c1_xylemOuter)"/>
+                  <path d="M 856 368 Q 878 390 900 375 L 900 540 L 856 540 Z" fill="url(#c1_xylemOuter)"/>
+                </g>
+              </g>
+
+              <!-- 4. CÁC LỚP TẾ BÀO VỎ RỄ 3D, LÔNG HÚT & NỘI BÌ (SINH TỰ ĐỘNG BẰNG JS CHO SẮC NÉT) -->
+              <g id="t1TissueGrid"></g>
+
+              <!-- Đường dẫn tế bào (2 nhánh uốn lượn qua cầu sinh chất vào mạch gỗ) -->
+              <path d="M 188 205 Q 305 212 418 220 Q 478 214 522 248 Q 574 282 618 256 Q 674 282 722 332 L 758 340 L 758 18"
+                    fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-dasharray="6 6" opacity="0.52"/>
+              <path d="M 380 222 Q 445 242 486 294 Q 542 336 592 318 Q 656 364 722 356 L 778 352 L 778 18"
+                    fill="none" stroke="#38bdf8" stroke-width="3.2" stroke-dasharray="6 6" opacity="0.45"/>
+
+              <!-- Khung vàng nhấn mạnh từng bước (1..4) -->
+              <rect id="t1Highlight1" x="16" y="142" width="166" height="128" rx="16" fill="none" stroke="#facc15" stroke-width="5.5" stroke-dasharray="10 5" opacity="0"/>
+              <rect id="t1Highlight2" x="180" y="168" width="268" height="98" rx="16" fill="none" stroke="#facc15" stroke-width="5.5" stroke-dasharray="10 5" opacity="0"/>
+              <rect id="t1Highlight3" x="444" y="176" width="210" height="162" rx="16" fill="none" stroke="#facc15" stroke-width="5.5" stroke-dasharray="10 5" opacity="0"/>
+              <rect id="t1Highlight4" x="716" y="8" width="98" height="524" rx="16" fill="none" stroke="#facc15" stroke-width="5.5" stroke-dasharray="10 5" opacity="0"/>
+
+              <!-- Hạt nước 3D xanh dương & ion khoáng chuyển động -->
+              <g id="t1Particles"></g>
+
+              <!-- NHÃN CALLOUT -->
+              <g class="sim-label-group" filter="url(#c1_shadow)">
+                <line x1="168" y1="128" x2="242" y2="198" stroke="#1f2937" stroke-width="2.2"/>
+                <rect x="86" y="106" width="104" height="34" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="138" y="123" font-size="14" fill="#ffffff" class="callout-text">Lông hút</text>
+
+                <line x1="234" y1="298" x2="394" y2="248" stroke="#1f2937" stroke-width="2.2"/>
+                <rect x="92" y="282" width="146" height="34" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="165" y="299" font-size="14" fill="#ffffff" class="callout-text">Thành tế bào</text>
+
+                <line x1="234" y1="396" x2="482" y2="336" stroke="#1f2937" stroke-width="2.2"/>
+                <rect x="92" y="380" width="146" height="34" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="165" y="397" font-size="14" fill="#ffffff" class="callout-text">Tế bào vỏ rễ</text>
+
+                <line x1="564" y1="112" x2="538" y2="242" stroke="#1f2937" stroke-width="2.2"/>
+                <rect x="462" y="80" width="174" height="34" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="549" y="97" font-size="14" fill="#ffffff" class="callout-text">Đường dẫn tế bào</text>
+
+                <line x1="208" y1="486" x2="758" y2="496" stroke="#1f2937" stroke-width="2.2"/>
+                <rect x="92" y="468" width="120" height="34" rx="10" fill="#0077ff" fill-opacity="0.95"/>
+                <text x="152" y="485" font-size="14.5" fill="#ffffff" class="callout-text">Mạch gỗ ↑</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- CÂY THUỶ SINH (TRƯỜNG HỢP ĐẶC BIỆT - ĐỒ HOẠ RONG ĐUÔI CHÓ RẬM RẠP) -->
+          <div class="svg-stage" id="t1AquaticStage" style="display:none;">
+            <svg viewBox="0 0 900 540" role="img" aria-label="Cây thuỷ sinh hấp thụ nước và khoáng qua toàn bộ bề mặt biểu bì">
+              <defs>
+                <!-- Nền nước bể thuỷ sinh có chiều sâu và ánh sáng từ trên chiếu xuống -->
+                <linearGradient id="aqDeepWater" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1e6f78"/>
+                  <stop offset="28%" stop-color="#0f3d3e"/>
+                  <stop offset="72%" stop-color="#07221d"/>
+                  <stop offset="100%" stop-color="#041510"/>
+                </linearGradient>
+                <radialGradient id="aqTopGlow" cx="50%" cy="6%" r="65%">
+                  <stop offset="0%" stop-color="#ecfccb" stop-opacity="0.55"/>
+                  <stop offset="45%" stop-color="#84cc16" stop-opacity="0.22"/>
+                  <stop offset="100%" stop-color="#064e3b" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="aqSunRay" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f7fee7" stop-opacity="0.34"/>
+                  <stop offset="100%" stop-color="#a3e635" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="aqTipGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#fefce8"/>
+                  <stop offset="45%" stop-color="#bef264"/>
+                  <stop offset="100%" stop-color="#4d7c0f"/>
+                </linearGradient>
+                <linearGradient id="aqStemGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#166534"/>
+                  <stop offset="50%" stop-color="#65a30d"/>
+                  <stop offset="100%" stop-color="#14532d"/>
+                </linearGradient>
+                <filter id="aqSoftShadow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.45"/>
+                </filter>
+              </defs>
+
+              <!-- 1. Bối cảnh nước sâu & tia sáng mặt nước -->
+              <rect x="0" y="0" width="900" height="540" fill="url(#aqDeepWater)"/>
+              <rect x="0" y="0" width="900" height="440" fill="url(#aqTopGlow)"/>
+              <polygon points="120,0 245,0 325,520 65,520" fill="url(#aqSunRay)"/>
+              <polygon points="355,0 535,0 600,520 295,520" fill="url(#aqSunRay)"/>
+              <polygon points="625,0 775,0 855,520 570,520" fill="url(#aqSunRay)"/>
+
+              <!-- Gợn sóng mặt nước trên cùng -->
+              <path d="M 0 26 Q 45 16 90 26 T 180 26 T 270 26 T 360 26 T 450 26 T 540 26 T 630 26 T 720 26 T 810 26 T 900 26"
+                    fill="none" stroke="#bae6fd" stroke-width="3" opacity="0.55"/>
+
+              <!-- 2. Lớp tán cây thuỷ sinh phía sau (tạo độ rậm rạp có chiều sâu) -->
+              <g id="t1AquaticPlantsBg"></g>
+
+              <!-- 3. Lớp cây rong đuôi chó chính phía trước (nhiều tầng lá vòng mảnh, ngọn sáng rực) -->
+              <g id="t1AquaticPlantsFg"></g>
+
+              <!-- 4. Đàn cá Neon nhỏ đặc trưng trong bể thuỷ sinh -->
+              <g id="t1NeonFish1" transform="translate(650, 395)">
+                <path d="M -22 0 Q -8 -10 12 -3 L 24 -9 L 19 0 L 24 9 L 12 3 Q -8 10 -22 0 Z" fill="#0f172a" opacity="0.45" transform="translate(0,3)"/>
+                <path d="M -22 0 Q -8 -10 12 -3 L 24 -9 L 19 0 L 24 9 L 12 3 Q -8 10 -22 0 Z" fill="#cbd5e1"/>
+                <path d="M -20 -1 Q -6 -7 12 -2 L 10 1 Q -6 -2 -20 1 Z" fill="#00e5ff"/>
+                <path d="M -2 1 Q 6 5 14 2 L 19 6 L 15 0 L 11 -1 Q 4 1 -2 1 Z" fill="#ef4444"/>
+                <circle cx="-14" cy="-2" r="2.2" fill="#0f172a"/>
+                <circle cx="-14.6" cy="-2.6" r="0.8" fill="#ffffff"/>
+              </g>
+              <g id="t1NeonFish2" transform="translate(105, 118) scale(-0.85, 0.85)">
+                <path d="M -22 0 Q -8 -10 12 -3 L 24 -9 L 19 0 L 24 9 L 12 3 Q -8 10 -22 0 Z" fill="#cbd5e1"/>
+                <path d="M -20 -1 Q -6 -7 12 -2 L 10 1 Q -6 -2 -20 1 Z" fill="#00e5ff"/>
+                <path d="M -2 1 Q 6 5 14 2 L 19 6 L 15 0 L 11 -1 Q 4 1 -2 1 Z" fill="#ef4444"/>
+                <circle cx="-14" cy="-2" r="2.2" fill="#0f172a"/>
+              </g>
+
+              <!-- 5. Bọt khí O₂ nhỏ nổi lên và hạt H₂O + khoáng hấp thụ qua toàn bộ bề mặt biểu bì -->
+              <g id="t1AquaticBubbles"></g>
+              <g id="t1AquaticParticles"></g>
+
+              <!-- 6. Nhãn & kí hiệu (có thể bật/tắt khi phóng to) -->
+              <g class="sim-label-group" filter="url(#aqSoftShadow)">
+                <rect x="200" y="14" width="500" height="36" rx="14" fill="#e0f2fe" fill-opacity="0.95" stroke="#0284c7" stroke-width="2.5"/>
+                <text x="450" y="32" font-size="15.5" fill="#0c4a6e" class="callout-text">Môi trường nước (chứa H₂O và chất khoáng hoà tan)</text>
+
+                <line x1="215" y1="225" x2="318" y2="262" stroke="#ffffff" stroke-width="2.2"/>
+                <rect x="24" y="198" width="206" height="46" rx="12" fill="#14532d" fill-opacity="0.92" stroke="#bef264" stroke-width="2"/>
+                <text x="127" y="214" font-size="13.5" fill="#fefce8" class="callout-text">Lá mảnh, thân chìm</text>
+                <text x="127" y="232" font-size="13" fill="#bef264" class="callout-text">(Biểu bì mỏng, không lớp cutin)</text>
+
+                <rect x="135" y="486" width="630" height="40" rx="14" fill="#f0fdf4" fill-opacity="0.96" stroke="#15803d" stroke-width="2.5"/>
+                <text x="450" y="506" font-size="15.5" fill="#14532d" class="callout-text">Cây thuỷ sinh: Hấp thụ nước &amp; chất khoáng qua TOÀN BỘ bề mặt biểu bì</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="legend-bar">
+            <span>🔵 Hạt nước (<strong>H₂O</strong>)</span>
+            <span>🟠 Ion khoáng (<strong>khoáng</strong>)</span>
+            <span>🟨 Viền vàng đứt: vùng bước đang chọn</span>
+          </div>
+        </div>
+
+        <!-- Bảng điều khiển Tab 1 -->
+        <div class="card">
+          <h3 style="margin-top:0;">Điều khiển hoạt hoạ 4 bước</h3>
+          <div class="btn-row">
+            <button id="t1AutoBtn" class="btn btn-primary" type="button">▶ Tự động</button>
+            <button id="t1NextStepBtn" class="btn" type="button">⏭ Bước tiếp theo</button>
+          </div>
+
+          <div class="step-list" id="t1StepList">
+            <div class="step-item active" data-step="1"><strong>Bước 1:</strong> Nước + chất khoáng hoà tan trong đất.</div>
+            <div class="step-item" data-step="2"><strong>Bước 2:</strong> Nước + chất khoáng vào tế bào lông hút.</div>
+            <div class="step-item" data-step="3"><strong>Bước 3:</strong> Đi qua các lớp tế bào vỏ rễ.</div>
+            <div class="step-item" data-step="4"><strong>Bước 4:</strong> Vào mạch gỗ ở trung tâm rồi đi lên thân.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="obs-box">
+        <h3>🔍 Em quan sát được gì?</h3>
+        <p id="obsTab1Text"></p>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 2: VẬN CHUYỂN CÁC CHẤT TRONG CÂY (Hình 30.2 + GÓC BÓ MẠCH)
+         =================================================================== -->
+    <section id="tab2" class="tab-panel" role="tabpanel">
+      <div class="panel-head">
+        <div>
+          <h2>2. Vận chuyển các chất trong cây (Hình 30.2)</h2>
+          <p class="guiding-q"><strong>Câu hỏi dẫn dắt:</strong> Mạch gỗ và mạch rây vận chuyển những chất gì, theo hướng nào? Hãy quan sát cả góc cắt dọc bó mạch trong thân!</p>
+        </div>
+        <button class="btn btn-reset" id="resetTab2" type="button">↺ Đặt lại</button>
+      </div>
+
+      <div class="sim-grid">
+        <div class="card">
+          <div class="btn-row">
+            <button class="btn btn-active" data-t2mode="overview" type="button">🌳 Sơ đồ toàn cây</button>
+            <button class="btn" data-t2mode="bundle" type="button">🔬 Góc bó mạch (Libe &amp; Gỗ)</button>
+          </div>
+
+          <!-- CHẾ ĐỘ 2A: SƠ ĐỒ TOÀN CÂY (THEO ĐÚNG HÌNH 30.2 SGK KHTN 7) -->
+          <div class="svg-stage" id="t2OverviewStage">
+            <svg viewBox="0 0 760 620" role="img" aria-label="Hình 30.2 Sự vận chuyển các chất trong cây">
+              <defs>
+                <!-- Nền trắng sạch giống SGK -->
+                <linearGradient id="t2_canopyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#a7db93"/>
+                  <stop offset="60%" stop-color="#8cc978"/>
+                  <stop offset="100%" stop-color="#76b862"/>
+                </linearGradient>
+                <linearGradient id="t2_trunkGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#e5be8c"/>
+                  <stop offset="45%" stop-color="#f7dfb8"/>
+                  <stop offset="100%" stop-color="#d4a46a"/>
+                </linearGradient>
+                <filter id="t2_Shadow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.16"/>
+                </filter>
+                <!-- Mũi tên cho Mạch gỗ (Đỏ) & Mạch rây (Xanh dương) theo Hình 30.2 -->
+                <marker id="arrowRed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#dc2626"/>
+                </marker>
+                <marker id="arrowBlue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                  <path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#0284c7"/>
+                </marker>
+              </defs>
+
+              <!-- Nền trắng tinh khiết -->
+              <rect x="0" y="0" width="760" height="620" fill="#ffffff"/>
+
+              <!-- 1. TÁN LÁ XANH DỊU BO TRÒN (GIỐNG HÌNH 30.2) -->
+              <g filter="url(#t2_Shadow)">
+                <!-- Lớp viền tán ngoài -->
+                <path d="M 332 108
+                         C 332 52, 412 24, 488 30
+                         C 578 36, 650 86, 652 162
+                         C 666 198, 668 242, 652 272
+                         C 634 304, 578 302, 540 278
+                         C 520 264, 514 232, 518 205
+                         C 502 184, 492 155, 485 130
+                         C 462 145, 435 162, 415 178
+                         C 392 214, 378 248, 358 262
+                         C 316 284, 256 278, 248 232
+                         C 242 192, 242 156, 268 128
+                         C 288 106, 314 114, 332 108 Z"
+                      fill="url(#t2_canopyGrad)" stroke="#68a656" stroke-width="4" stroke-linejoin="round"/>
+                <!-- Nét nhấn mềm bên trong tán lá -->
+                <path d="M 344 118 C 350 70, 418 46, 484 50 C 562 56, 628 98, 632 166 C 644 198, 644 236, 632 260"
+                      fill="none" stroke="#b9e6a8" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+                <path d="M 268 232 C 264 195, 265 164, 286 140"
+                      fill="none" stroke="#b9e6a8" stroke-width="4.5" stroke-linecap="round" opacity="0.65"/>
+              </g>
+
+              <!-- 2. THÂN CÂY, CÀNH CÂY VÀ BỘ RỄ PHÂN NHÁNH (MÀU GỖ SÁNG) -->
+              <g fill="url(#t2_trunkGrad)" stroke="#9a6b3e" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+                <!-- Thân chính, các cành trong tán và hệ rễ phân nhánh -->
+                <path d="M 424 148
+                         L 424 192 L 392 156 L 382 166 L 418 214
+                         L 418 262 L 368 226 L 360 238 L 414 282
+                         C 412 332, 408 386, 406 416
+                         C 392 436, 355 446, 294 452
+                         C 264 455, 246 462, 232 474
+                         C 256 466, 284 462, 318 462
+                         C 284 478, 255 494, 238 506
+                         C 272 492, 306 478, 344 470
+                         C 322 492, 304 516, 296 534
+                         C 320 512, 344 490, 374 474
+                         C 368 502, 368 528, 378 552
+                         C 382 528, 386 502, 404 478
+                         C 416 504, 418 534, 424 558
+                         C 430 532, 434 504, 444 480
+                         C 462 504, 474 528, 480 554
+                         C 484 526, 478 498, 470 474
+                         C 500 494, 524 514, 548 534
+                         C 536 510, 514 488, 490 468
+                         C 526 478, 560 494, 594 508
+                         C 574 490, 544 474, 512 460
+                         C 552 460, 588 468, 622 482
+                         C 600 462, 566 452, 528 446
+                         C 492 442, 466 432, 456 414
+                         C 454 382, 456 326, 460 282
+                         L 516 248 L 510 236 L 462 262
+                         L 462 222 L 516 178 L 506 168 L 462 202
+                         L 462 162 L 496 138 L 488 128 L 456 148
+                         L 456 122 L 424 148 Z"/>
+                <!-- Thêm nhánh rễ phụ nhỏ cho tự nhiên như Hình 30.2 -->
+                <path d="M 358 494 Q 340 514 334 532" fill="none" stroke="#9a6b3e" stroke-width="2.2"/>
+                <path d="M 398 504 Q 392 526 396 544" fill="none" stroke="#9a6b3e" stroke-width="2.2"/>
+                <path d="M 454 498 Q 456 520 450 538" fill="none" stroke="#9a6b3e" stroke-width="2.2"/>
+                <path d="M 526 488 Q 546 502 562 518" fill="none" stroke="#9a6b3e" stroke-width="2.2"/>
+                <path d="M 304 474 Q 278 482 258 490" fill="none" stroke="#9a6b3e" stroke-width="2"/>
+                <path d="M 552 464 Q 582 466 608 470" fill="none" stroke="#9a6b3e" stroke-width="2"/>
+              </g>
+
+              <!-- 3. HAI DÒNG MẠCH DẪN THEO ĐÚNG HÌNH 30.2 SGK -->
+              <!-- Mạch gỗ (ĐỎ - nét liền - đi LÊN từ rễ lên lá) -->
+              <path id="t2XylemPath"
+                    d="M 190 484 C 245 456, 330 450, 386 438 C 414 432, 422 414, 424 385 L 428 242 C 428 214, 424 198, 405 178 L 320 96"
+                    fill="none" stroke="#dc2626" stroke-width="4.5" stroke-linecap="round"
+                    marker-end="url(#arrowRed)"/>
+              <!-- Các mũi tên nhỏ dọc đường mạch gỗ (↑) -->
+              <g fill="#dc2626">
+                <polygon points="366,442 355,437 358,448"/>
+                <polygon points="426,315 420,327 432,327"/>
+                <polygon points="428,225 422,237 434,237"/>
+                <polygon points="368,143 379,147 371,155"/>
+              </g>
+
+              <!-- Mạch rây (XANH DƯƠNG - nét đứt nhẹ - đi XUỐNG từ lá xuống rễ) -->
+              <path id="t2PhloemPath"
+                    d="M 524 128 C 482 154, 456 184, 454 225 L 444 388 C 442 422, 456 446, 514 462"
+                    fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="14 6"
+                    marker-end="url(#arrowBlue)"/>
+              <!-- Các mũi tên nhỏ dọc đường mạch rây (↓) -->
+              <g fill="#0284c7">
+                <polygon points="454,218 448,206 460,206"/>
+                <polygon points="449,296 443,284 455,284"/>
+                <polygon points="445,382 439,370 451,370"/>
+              </g>
+
+              <!-- Hạt nước/khoáng & chất hữu cơ chuyển động dọc 2 đường mạch -->
+              <g id="t2OverviewParticles"></g>
+
+              <!-- 4. NHÃN GHI CHÚ TRỰC TIẾP GIỐNG HÌNH 30.2 -->
+              <g class="sim-label-group" font-weight="700" fill="#1f1212">
+                <!-- Nước (trên trái) -->
+                <text x="275" y="102" font-size="21" text-anchor="middle">Nước</text>
+
+                <!-- Chất hữu cơ (trên phải) -->
+                <text x="536" y="120" font-size="21" text-anchor="middle">Chất hữu cơ</text>
+
+                <!-- Mạch gỗ (giữa trái) -->
+                <line x1="364" y1="342" x2="424" y2="342" stroke="#334155" stroke-width="2.2"/>
+                <text x="352" y="349" font-size="22" text-anchor="end" fill="#dc2626">Mạch gỗ ↑</text>
+
+                <!-- Mạch rây (giữa phải) -->
+                <line x1="448" y1="342" x2="508" y2="342" stroke="#334155" stroke-width="2.2"/>
+                <text x="520" y="349" font-size="22" text-anchor="start" fill="#0284c7">Mạch rây ↓</text>
+
+                <!-- Nước và chất khoáng (dưới trái) -->
+                <text x="115" y="486" font-size="20" text-anchor="middle">Nước và</text>
+                <text x="115" y="512" font-size="20" text-anchor="middle">chất khoáng</text>
+              </g>
+
+              <!-- Tiêu đề chân hình giống SGK -->
+              <g class="sim-label-group">
+                <rect x="172" y="572" width="128" height="36" rx="18" fill="#4f8fa3"/>
+                <text x="236" y="590" font-size="19" fill="#ffffff" class="callout-text">Hình 30.2</text>
+                <text x="314" y="596" font-size="20" font-weight="700" fill="#1f1212">Sự vận chuyển các chất trong cây</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- CHẾ ĐỘ 2B: GÓC CẬN CẢNH BÓ MẠCH TRONG THÂN (GIỐNG ẢNH MẪU 3) -->
+          <div class="svg-stage" id="t2BundleStage" style="display:none;">
+            <svg viewBox="0 0 900 540" role="img" aria-label="Mặt cắt dọc 3D bó mạch trong thân cây gồm libe, tầng phát sinh gỗ và mạch gỗ">
+              <defs>
+                <!-- Vỏ xanh ngoài cùng bên trái -->
+                <linearGradient id="b_barkLeft" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#84a973"/>
+                  <stop offset="55%" stop-color="#628c53"/>
+                  <stop offset="100%" stop-color="#3c5e33"/>
+                </linearGradient>
+                <!-- Nền mô tế bào cơ bản bên phải -->
+                <linearGradient id="b_pithGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#8e7754"/>
+                  <stop offset="50%" stop-color="#a88f64"/>
+                  <stop offset="100%" stop-color="#6b5638"/>
+                </linearGradient>
+                <!-- Mặt cắt ngang ở đáy -->
+                <linearGradient id="b_floorGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#d6ba8a"/>
+                  <stop offset="100%" stop-color="#f3dbb0"/>
+                </linearGradient>
+                <!-- Ống Libe (mạch rây) màu xanh lục -->
+                <linearGradient id="b_phloemTube" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#658c38"/>
+                  <stop offset="45%" stop-color="#a6cf68"/>
+                  <stop offset="100%" stop-color="#52752a"/>
+                </linearGradient>
+                <!-- Tầng phát sinh gỗ (trắng hồng) -->
+                <linearGradient id="b_cambiumGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#cbd5e1"/>
+                  <stop offset="50%" stop-color="#f8fafc"/>
+                  <stop offset="100%" stop-color="#d6d3d1"/>
+                </linearGradient>
+                <!-- Ống Mạch gỗ màu nâu vàng -->
+                <linearGradient id="b_xylemTube" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#8f6737"/>
+                  <stop offset="48%" stop-color="#d4ad72"/>
+                  <stop offset="100%" stop-color="#6e4d25"/>
+                </linearGradient>
+                <!-- Bộ lọc đổ bóng riêng cho Góc bó mạch (không phụ thuộc SVG khác) -->
+                <filter id="b_Shadow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.22"/>
+                </filter>
+              </defs>
+
+              <!-- 1. Vỏ xanh ngoài cùng bên trái -->
+              <rect x="0" y="0" width="138" height="540" fill="url(#b_barkLeft)"/>
+              <!-- 2. Lớp mô vỏ xanh-vàng trước libe -->
+              <rect x="138" y="0" width="142" height="540" fill="#778c56"/>
+              <!-- 3. Lớp tế bào cơ bản rộng bên phải -->
+              <rect x="556" y="0" width="344" height="540" fill="url(#b_pithGrad)"/>
+              <!-- Họa tiết tế bào cơ bản tổ ong (sinh bằng JS) -->
+              <g id="t2BundleCells" opacity="0.62"></g>
+
+              <!-- Mặt cắt ngang phần đáy tạo chiều sâu 3D giống ảnh mẫu 3 -->
+              <polygon points="280,540 556,492 900,405 900,540" fill="url(#b_floorGrad)" stroke="#785a32" stroke-width="2"/>
+
+              <!-- 4. CÁC ỐNG LIBE (MẠCH RÂY) - 5 ống màu xanh lục có tấm rây ngang -->
+              <g stroke="#365314" stroke-width="2.2">
+                <rect x="282" y="0" width="27" height="528" fill="url(#b_phloemTube)"/>
+                <rect x="309" y="0" width="27" height="522" fill="url(#b_phloemTube)"/>
+                <rect x="336" y="0" width="27" height="516" fill="url(#b_phloemTube)"/>
+                <rect x="363" y="0" width="27" height="510" fill="url(#b_phloemTube)"/>
+                <rect x="390" y="0" width="27" height="504" fill="url(#b_phloemTube)"/>
+              </g>
+              <!-- Vách ngăn tấm rây đục lỗ -->
+              <g stroke="#ecfccb" stroke-width="2.5" stroke-dasharray="4 4" opacity="0.75">
+                <line x1="282" y1="88" x2="417" y2="88"/><line x1="282" y1="186" x2="417" y2="186"/>
+                <line x1="282" y1="288" x2="417" y2="288"/><line x1="282" y1="392" x2="417" y2="392"/>
+              </g>
+
+              <!-- 5. TẦNG PHÁT SINH GỖ (THƯỢNG TẦNG) - 2 cột tế bào trắng hồng xếp đều -->
+              <g id="t2CambiumCells"></g>
+
+              <!-- 6. CÁC ỐNG MẠCH GỖ - 5 ống nâu vàng rộng dài không vách ngăn -->
+              <g stroke="#4a3114" stroke-width="2.2">
+                <rect x="462" y="0" width="20" height="495" fill="url(#b_xylemTube)"/>
+                <rect x="482" y="0" width="20" height="492" fill="url(#b_xylemTube)"/>
+                <rect x="502" y="0" width="20" height="488" fill="url(#b_xylemTube)"/>
+                <rect x="522" y="0" width="20" height="484" fill="url(#b_xylemTube)"/>
+                <rect x="542" y="0" width="18" height="480" fill="url(#b_xylemTube)"/>
+              </g>
+
+              <!-- Hạt chất hữu cơ (CHC) chảy XUỐNG trong Mạch rây & hạt nước (H₂O) + khoáng (K⁺) chảy LÊN trong Mạch gỗ -->
+              <g id="t2BundleParticles"></g>
+
+              <!-- Mũi tên & tiêu đề phân biệt rõ Mạch rây (Libe) và Mạch gỗ -->
+              <g class="sim-label-group" filter="url(#b_Shadow)">
+                <rect x="274" y="10" width="152" height="34" rx="10" fill="#be123c" stroke="#ffffff" stroke-width="2"/>
+                <text x="350" y="27" font-size="14" fill="#ffffff" class="callout-text">MẠCH RÂY (LIBE) ↓</text>
+
+                <rect x="454" y="10" width="120" height="34" rx="10" fill="#0077ff" stroke="#ffffff" stroke-width="2"/>
+                <text x="514" y="27" font-size="14" fill="#ffffff" class="callout-text">MẠCH GỖ ↑</text>
+
+                <!-- Mũi tên định hướng dọc hai bên bó mạch -->
+                <path d="M 262 115 L 262 210 M 252 195 L 262 215 L 272 195" fill="none" stroke="#be123c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 580 215 L 580 120 M 570 135 L 580 115 L 590 135" fill="none" stroke="#0077ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+
+              <!-- NHÃN CALLOUT CHỈ RÕ MẠCH RÂY, MẠCH GỖ & CÁC CHẤT -->
+              <g class="sim-label-group" filter="url(#b_Shadow)">
+                <line x1="226" y1="100" x2="335" y2="152" stroke="#be123c" stroke-width="2.6"/>
+                <rect x="18" y="68" width="214" height="58" rx="12" fill="#fff1f2" stroke="#be123c" stroke-width="2.6"/>
+                <text x="125" y="86" font-size="15.5" fill="#be123c" class="callout-text">Mạch rây (Libe) ↓</text>
+                <text x="125" y="109" font-size="13.5" fill="#7f1d1d" class="callout-text">Vận chuyển: CHC (Chất hữu cơ)</text>
+
+                <line x1="300" y1="348" x2="438" y2="386" stroke="#111827" stroke-width="2.2"/>
+                <rect x="18" y="330" width="286" height="36" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="161" y="348" font-size="14.5" fill="#ffffff" class="callout-text">Tầng phát sinh gỗ (thượng tầng)</text>
+
+                <line x1="654" y1="100" x2="526" y2="148" stroke="#0077ff" stroke-width="2.6"/>
+                <rect x="650" y="68" width="234" height="58" rx="12" fill="#eff6ff" stroke="#0077ff" stroke-width="2.6"/>
+                <text x="767" y="86" font-size="15.5" fill="#0369a1" class="callout-text">Mạch gỗ ↑</text>
+                <text x="767" y="109" font-size="13.5" fill="#0c4a6e" class="callout-text">Vận chuyển: H₂O + Khoáng (K⁺)</text>
+
+                <line x1="770" y1="296" x2="625" y2="395" stroke="#111827" stroke-width="2.2"/>
+                <rect x="730" y="274" width="150" height="34" rx="10" fill="#4b5563" fill-opacity="0.94"/>
+                <text x="805" y="291" font-size="14.5" fill="#ffffff" class="callout-text">Tế bào cơ bản</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="legend-bar" id="t2LegendBar">
+            <span>━━ <strong style="color:#dc2626">Mạch gỗ ↑</strong> (Hình 30.2 - nét liền đỏ): Nước (H₂O) + chất khoáng</span>
+            <span>┄┄ <strong style="color:#0284c7">Mạch rây ↓</strong> (Hình 30.2 - nét đứt xanh): Chất hữu cơ (CHC)</span>
+          </div>
+        </div>
+
+        <!-- Bảng điều khiển Tab 2 -->
+        <div class="card">
+          <h3 style="margin-top:0;">Thông tin góc nhìn đang chọn</h3>
+
+          <div id="t2CtrlOverview">
+            <p>Quan sát <strong>Hình 30.2 (SGK)</strong> – hai dòng vận chuyển ngược chiều trong thân cây:</p>
+            <ul>
+              <li><strong style="color:#dc2626">Mạch gỗ (đường đỏ, nét liền ↑):</strong> vận chuyển <strong>nước và chất khoáng</strong> từ rễ lên thân, lá.</li>
+              <li><strong style="color:#0284c7">Mạch rây (đường xanh, nét đứt ↓):</strong> vận chuyển <strong>chất hữu cơ</strong> từ lá xuống thân, rễ và các cơ quan dự trữ.</li>
+            </ul>
+          </div>
+
+          <div id="t2CtrlBundle" style="display:none;">
+            <p>Góc cắt dọc cận cảnh <strong>bó mạch trong thân cây</strong>:</p>
+            <ul>
+              <li><strong style="color:var(--phloem)">Mạch rây (Libe - bên ngoài):</strong> các ống xanh lục có tấm rây, vận chuyển <strong>chất hữu cơ (kí hiệu CHC)</strong> đi xuống ↓.</li>
+              <li><strong>Tầng phát sinh gỗ (thượng tầng - ở giữa):</strong> dãy tế bào màu trắng hồng phân chia giúp thân cây to ra.</li>
+              <li><strong style="color:var(--water)">Mạch gỗ (bên trong):</strong> các ống nâu vàng rộng dài, vận chuyển <strong>nước (H₂O) &amp; ion khoáng (K⁺)</strong> đi lên ↑.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="obs-box">
+        <h3>🔍 Em quan sát được gì?</h3>
+        <p id="obsTab2Text"></p>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 3: KHÍ KHỔNG VÀ SỰ THOÁT HƠI NƯỚC (Hình 30.3, 30.4)
+         =================================================================== -->
+    <section id="tab3" class="tab-panel" role="tabpanel">
+      <div class="panel-head">
+        <div>
+          <h2>3. Khí khổng và sự thoát hơi nước (Hình 30.3, 30.4)</h2>
+          <p class="guiding-q"><strong>Câu hỏi dẫn dắt:</strong> Vì sao khí khổng mở ra khi no nước và khép lại khi mất nước? Thoát hơi nước có vai trò gì đối với cây?</p>
+        </div>
+        <button class="btn btn-reset" id="resetTab3" type="button">↺ Đặt lại</button>
+      </div>
+
+      <div class="sim-grid">
+        <div class="card">
+          <div class="svg-stage">
+            <svg id="svgTab3" viewBox="0 0 920 620" role="img" aria-label="Mô phỏng đóng mở khí khổng, nhiệt độ lá và lực hút nước">
+              <defs>
+                <linearGradient id="t3_skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2299f8"/>
+                  <stop offset="55%" stop-color="#9ad8ff"/>
+                  <stop offset="100%" stop-color="#e0f4ff"/>
+                </linearGradient>
+                <linearGradient id="t3_grassGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#a3e635"/>
+                  <stop offset="60%" stop-color="#65a30d"/>
+                  <stop offset="100%" stop-color="#3f6212"/>
+                </linearGradient>
+                <linearGradient id="t3_earthTop" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#b86827"/>
+                  <stop offset="100%" stop-color="#8b4513"/>
+                </linearGradient>
+                <linearGradient id="t3_earthDeep" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7c3a0f"/>
+                  <stop offset="100%" stop-color="#4e2206"/>
+                </linearGradient>
+                <linearGradient id="t3_stemGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#3f9b1c"/>
+                  <stop offset="45%" stop-color="#bef264"/>
+                  <stop offset="100%" stop-color="#365314"/>
+                </linearGradient>
+                <linearGradient id="t3_leafGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#bef264"/>
+                  <stop offset="55%" stop-color="#65a30d"/>
+                  <stop offset="100%" stop-color="#15803d"/>
+                </linearGradient>
+                <linearGradient id="t3_rootGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#fef9c3"/>
+                  <stop offset="55%" stop-color="#fde047"/>
+                  <stop offset="100%" stop-color="#d97706"/>
+                </linearGradient>
+                <linearGradient id="t3_coneGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.06"/>
+                </linearGradient>
+                <radialGradient id="t3_lensBg" cx="40%" cy="30%" r="75%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#e0f2fe"/>
+                </radialGradient>
+                <radialGradient id="t3_guardGrad" cx="35%" cy="35%" r="70%">
+                  <stop offset="0%" stop-color="#d9f99d"/>
+                  <stop offset="55%" stop-color="#84cc16"/>
+                  <stop offset="100%" stop-color="#15803d"/>
+                </radialGradient>
+                <radialGradient id="t3_poreDepth" cx="50%" cy="50%" r="55%">
+                  <stop offset="0%" stop-color="#0f172a"/>
+                  <stop offset="100%" stop-color="#334155"/>
+                </radialGradient>
+                <radialGradient id="t3_stoneGrad" cx="35%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#cbd5e1"/>
+                  <stop offset="100%" stop-color="#475569"/>
+                </radialGradient>
+                <filter id="t3_shadow" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.22"/>
+                </filter>
+                <clipPath id="t3_clipMainLens"><circle cx="206" cy="202" r="184"/></clipPath>
+                <clipPath id="t3_clipStemLens"><circle cx="742" cy="402" r="118"/></clipPath>
+                <clipPath id="t3_clipRootLens"><circle cx="255" cy="512" r="88"/></clipPath>
+              </defs>
+
+              <!-- Bầu trời, mây, cỏ, đất -->
+              <rect x="0" y="0" width="920" height="430" fill="url(#t3_skyGrad)"/>
+              <g fill="#ffffff" opacity="0.92">
+                <path d="M 740 105 Q 740 80 772 80 Q 792 52 835 60 Q 875 50 895 78 Q 920 80 920 105 Z"/>
+                <path d="M 755 248 Q 755 218 792 218 Q 815 186 865 196 Q 908 188 920 220 L 920 248 Z"/>
+                <path d="M 10 330 Q 10 302 48 302 Q 68 272 118 282 Q 158 275 178 306 Q 208 308 208 330 Z"/>
+              </g>
+              <rect x="0" y="405" width="920" height="42" fill="url(#t3_grassGrad)"/>
+              <g fill="#4d7c0f" stroke="#166534" stroke-width="1.5">
+                <path d="M 55 415 Q 42 385 24 378 Q 48 390 62 415 M 64 415 Q 66 380 78 370 Q 72 394 72 415 M 74 415 Q 88 388 106 382 Q 86 398 80 415"/>
+                <path d="M 240 416 Q 230 390 216 384 Q 236 396 246 416 M 248 416 Q 254 386 266 378 Q 257 398 256 416"/>
+              </g>
+              <rect x="0" y="440" width="920" height="180" fill="url(#t3_earthTop)"/>
+              <path d="M 0 492 Q 250 478 480 492 T 920 486 L 920 620 L 0 620 Z" fill="url(#t3_earthDeep)"/>
+              <g fill="#92400e" stroke="#451a03" stroke-width="1.6" opacity="0.88">
+                <ellipse cx="45" cy="442" rx="34" ry="10"/><ellipse cx="122" cy="444" rx="28" ry="10"/>
+                <ellipse cx="645" cy="442" rx="36" ry="11"/><ellipse cx="748" cy="444" rx="38" ry="11"/>
+                <ellipse cx="852" cy="442" rx="42" ry="10"/>
+              </g>
+              <ellipse cx="78" cy="585" rx="22" ry="11" fill="url(#t3_stoneGrad)"/>
+              <ellipse cx="628" cy="595" rx="24" ry="11" fill="url(#t3_stoneGrad)"/>
+              <ellipse cx="818" cy="575" rx="16" ry="8" fill="url(#t3_stoneGrad)"/>
+
+              <!-- Cây xanh & bộ rễ ở giữa -->
+              <g fill="url(#t3_rootGrad)" stroke="#713f12" stroke-width="2">
+                <path d="M 480 436 L 516 436 L 510 508 L 498 606 L 486 508 Z"/>
+                <path d="M 484 446 Q 410 472 332 518 Q 416 492 488 468 Z"/>
+                <path d="M 488 478 Q 428 525 362 580 Q 438 542 492 504 Z"/>
+                <path d="M 512 446 Q 586 472 672 518 Q 582 492 508 468 Z"/>
+                <path d="M 508 478 Q 568 525 636 580 Q 558 542 504 504 Z"/>
+              </g>
+              <path d="M 398 486 Q 452 468 498 446" fill="none" stroke="#0077ff" stroke-width="4.5" stroke-linecap="round"/>
+
+              <g filter="url(#t3_shadow)">
+                <path d="M 488 442 C 488 330 490 220 490 135 L 508 135 C 508 220 510 330 510 442 Z" fill="url(#t3_stemGrad)" stroke="#166534" stroke-width="2.5"/>
+                <path d="M 490 240 Q 445 160 398 145" fill="none" stroke="#65a30d" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 506 225 Q 555 125 635 120" fill="none" stroke="#65a30d" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 490 325 Q 435 268 375 268" fill="none" stroke="#65a30d" stroke-width="8" stroke-linecap="round"/>
+                <path d="M 506 315 Q 558 260 618 264" fill="none" stroke="#65a30d" stroke-width="8" stroke-linecap="round"/>
+
+                <g fill="url(#t3_leafGrad)" stroke="#14532d" stroke-width="2.2">
+                  <path d="M 494 138 Q 470 55 540 36 Q 582 55 592 102 Q 540 100 494 138 Z"/>
+                  <path d="M 492 140 Q 455 75 390 92 Q 368 132 415 160 Q 462 152 492 140 Z"/>
+                  <path d="M 420 156 Q 355 152 332 212 Q 395 210 432 175 Z"/>
+                  <path d="M 615 122 Q 668 84 745 106 Q 718 148 655 142 Z"/>
+                  <path d="M 605 135 Q 582 195 628 242 Q 672 200 645 145 Z"/>
+                  <path d="M 655 140 Q 692 182 742 218 Q 752 162 695 136 Z"/>
+                  <path d="M 422 272 Q 352 248 310 296 Q 368 320 426 286 Z"/>
+                  <path d="M 385 292 Q 332 325 322 385 Q 388 368 410 305 Z"/>
+                  <path d="M 572 268 Q 625 225 688 265 Q 642 308 576 282 Z"/>
+                </g>
+              </g>
+
+              <g fill="#0077ff" stroke="#ffffff" stroke-width="2">
+                <path d="M 494 446 L 494 410 L 484 410 L 499 382 L 514 410 L 504 410 L 504 446 Z"/>
+                <path d="M 494 372 L 494 334 L 484 334 L 499 306 L 514 334 L 504 334 L 504 372 Z"/>
+                <path d="M 494 282 L 494 244 L 484 244 L 499 216 L 514 244 L 504 244 L 504 282 Z"/>
+              </g>
+
+              <!-- KÍNH LÚP 1 (TRÊN TRÁI): KHÍ KHỔNG TƯƠNG TÁC + SÓNG HƠI NƯỚC -->
+              <polygon points="348,96 426,118 358,215" fill="url(#t3_coneGrad)"/>
+              <circle cx="206" cy="202" r="186" fill="url(#t3_lensBg)" stroke="#0284c7" stroke-width="6" filter="url(#t3_shadow)"/>
+
+              <g clip-path="url(#t3_clipMainLens)">
+                <ellipse cx="206" cy="255" rx="195" ry="118" fill="#dcfce7" opacity="0.65"/>
+                <path id="t3Pore" d="" fill="url(#t3_poreDepth)"/>
+
+                <g filter="url(#t3_shadow)">
+                  <path id="t3GuardL" d="" fill="url(#t3_guardGrad)" stroke="#166534" stroke-width="3.5"/>
+                  <path id="t3InnerL" d="" fill="none" stroke="#14532d" stroke-width="11" stroke-linecap="round"/>
+                  <path id="t3GuardR" d="" fill="url(#t3_guardGrad)" stroke="#166534" stroke-width="3.5"/>
+                  <path id="t3InnerR" d="" fill="none" stroke="#14532d" stroke-width="11" stroke-linecap="round"/>
+                </g>
+
+                <g id="t3Chloroplasts" fill="#14532d" stroke="#bef264" stroke-width="1.2"></g>
+
+                <g id="t3VaporWaves" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-linecap="round" opacity="0.9">
+                  <path d="M 168 180 Q 158 160 168 140 T 168 100"/>
+                  <path d="M 160 112 L 168 95 L 176 112"/>
+                  <path d="M 206 168 Q 196 146 206 124 T 206 84"/>
+                  <path d="M 198 96 L 206 79 L 214 96"/>
+                  <path d="M 244 180 Q 234 160 244 140 T 244 100"/>
+                  <path d="M 236 112 L 244 95 L 252 112"/>
+                </g>
+
+                <g id="t3GasParticles"></g>
+
+                <g class="sim-label-group">
+                  <rect x="92" y="34" width="228" height="36" rx="16" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2.5"/>
+                  <text id="t3PoreLabel" x="206" y="52" font-size="16" fill="#0c4a6e" class="callout-text">Khí khổng: Mở rộng</text>
+
+                  <rect x="28" y="218" width="92" height="44" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+                  <text x="74" y="233" font-size="12" fill="#14532d" class="callout-text">Thành ngoài</text>
+                  <text x="74" y="249" font-size="12" fill="#15803d" class="callout-text">MỎNG</text>
+
+                  <rect x="292" y="218" width="92" height="44" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+                  <text x="338" y="233" font-size="12" fill="#78350f" class="callout-text">Thành trong</text>
+                  <text x="338" y="249" font-size="12" fill="#b45309" class="callout-text">DÀY</text>
+
+                  <rect x="94" y="334" width="224" height="36" rx="16" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2.5"/>
+                  <text x="206" y="352" font-size="16" fill="#0c4a6e" class="callout-text">Thoát hơi nước</text>
+                </g>
+              </g>
+
+              <!-- KHUNG NHIỆT KẾ GÓC TRÊN PHẢI -->
+              <g class="sim-label-group" filter="url(#t3_shadow)">
+                <rect x="742" y="16" width="164" height="175" rx="18" fill="#ffffff" fill-opacity="0.92" stroke="#0284c7" stroke-width="3"/>
+                <text x="824" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Nhiệt độ lá</text>
+                <rect x="812" y="52" width="22" height="86" rx="11" fill="#f1f5f9" stroke="#475569" stroke-width="2.5"/>
+                <circle cx="823" cy="144" r="15" fill="#0ea5e9" id="t3ThermoBulb" stroke="#475569" stroke-width="2"/>
+                <rect id="t3ThermoFill" x="817" y="88" width="12" height="56" rx="6" fill="#0ea5e9"/>
+                <text id="t3TempText" x="824" y="178" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">Mát (~28°C)</text>
+              </g>
+
+              <!-- KÍNH LÚP 2 (PHẢI DƯỚI): MẠCH GỖ THÂN + PHÂN TỬ H2O 3D -->
+              <polygon points="508,358 634,325 634,475" fill="url(#t3_coneGrad)"/>
+              <circle cx="742" cy="402" r="120" fill="url(#t3_lensBg)" stroke="#0284c7" stroke-width="6" filter="url(#t3_shadow)"/>
+
+              <g clip-path="url(#t3_clipStemLens)">
+                <path d="M 678 270 Q 652 402 678 534" fill="none" stroke="#65a30d" stroke-width="14"/>
+                <path d="M 678 270 Q 652 402 678 534" fill="none" stroke="#bef264" stroke-width="5"/>
+                <path d="M 806 270 Q 780 402 806 534" fill="none" stroke="#65a30d" stroke-width="14"/>
+                <path d="M 806 270 Q 780 402 806 534" fill="none" stroke="#bef264" stroke-width="5"/>
+                <g id="t3PullParticles"></g>
+                <g class="sim-label-group">
+                  <rect x="652" y="482" width="180" height="30" rx="12" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                  <text id="t3PullLabel" x="742" y="497" font-size="13.5" fill="#0369a1" class="callout-text">Lực kéo: Mạnh ↑</text>
+                </g>
+              </g>
+
+              <!-- KÍNH LÚP 3 (DƯỚI TRÁI): PHÂN TỬ H2O 3D TỪ ĐẤT VÀO RỄ -->
+              <polygon points="395,486 334,462 334,558" fill="url(#t3_coneGrad)"/>
+              <circle cx="255" cy="512" r="90" fill="url(#t3_lensBg)" stroke="#0284c7" stroke-width="5.5" filter="url(#t3_shadow)"/>
+              <g clip-path="url(#t3_clipRootLens)" id="t3RootLensMolecules"></g>
+
+              <g class="sim-label-group">
+                <rect x="405" y="582" width="495" height="28" rx="10" fill="#ffffff" fill-opacity="0.88"/>
+                <text x="652" y="601" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">*Lưu ý: O₂ do quang hợp tạo ra, không phải do thoát hơi nước.</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="legend-bar">
+            <span>🔴🔵 Phân tử <strong>H₂O</strong> (3D)</span>
+            <span>〰️↑ <strong>Thoát hơi nước</strong></span>
+            <span>▲ <strong>CO₂</strong> vào lá</span>
+            <span>■ <strong>O₂</strong> ra (khi có ánh sáng)</span>
+          </div>
+        </div>
+
+        <!-- Bảng điều khiển Tab 3 -->
+        <div class="card">
+          <h3 style="margin-top:0;">Điều khiển khí khổng</h3>
+
+          <div class="control-group">
+            <div class="control-label">
+              <label for="t3Water">💧 Lượng nước trong tế bào khí khổng</label>
+              <span class="val-pill" id="t3WaterVal">80% (Trương nước)</span>
+            </div>
+            <input id="t3Water" type="range" min="0" max="100" value="80">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>☀️ Ánh sáng</span>
+              <span class="val-pill" id="t3LightVal">Sáng mạnh</span>
+            </div>
+            <div class="btn-row" style="margin-bottom:0;">
+              <button class="btn" data-t3light="dark" type="button">🌙 Tối</button>
+              <button class="btn" data-t3light="dim" type="button">⛅ Râm mát</button>
+              <button class="btn btn-active" data-t3light="bright" type="button">☀️ Sáng mạnh</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Độ mở lỗ khí hiện tại:</span>
+              <span class="val-pill" id="t3ApertureVal">Mở rộng (80%)</span>
+            </div>
+            <div class="meter-bar-bg">
+              <div id="t3ApertureBar" class="meter-bar-fill" style="background:var(--primary); width:80%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="obs-box">
+        <h3>🔍 Em quan sát được gì?</h3>
+        <p id="obsTab3Text"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Mô hình minh hoạ định tính</strong> - Phục vụ dạy học bài "Trao đổi nước và chất dinh dưỡng ở thực vật" – KHTN 7 (Kết nối tri thức).
+  </footer>
+
+  <script>
+    /* =====================================================================
+       TIỆN ÍCH CHUNG: CHUYỂN TAB, SÁNG/TỐI, TẠO SVG & PHÂN TỬ H2O 3D
+       ===================================================================== */
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    let activeTab = "tab1";
+
+    /** Tạo nhanh phần tử SVG kèm thuộc tính */
+    function elSVG(tag, attrs = {}) {
+      const node = document.createElementNS(SVG_NS, tag);
+      for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+      return node;
+    }
+
+    /** Tạo mô hình phân tử nước H2O dạng 3D (O đỏ bóng + 2 H xanh dương) */
+    function createH2OMolecule(scale = 1, showLabel = true) {
+      const g = elSVG("g", { transform: `scale(${scale})` });
+      g.appendChild(elSVG("line", { x1: 0, y1: 0, x2: -11, y2: 9, stroke: "#334155", "stroke-width": "3.2", "stroke-linecap": "round" }));
+      g.appendChild(elSVG("line", { x1: 0, y1: 0, x2: 11, y2: 9, stroke: "#334155", "stroke-width": "3.2", "stroke-linecap": "round" }));
+      g.appendChild(elSVG("circle", { cx: -11, cy: 9, r: 5.5, fill: "#0284c7", stroke: "#0369a1", "stroke-width": "1" }));
+      g.appendChild(elSVG("circle", { cx: -12.5, cy: 7.5, r: 1.8, fill: "#bae6fd" }));
+      g.appendChild(elSVG("circle", { cx: 11, cy: 9, r: 5.5, fill: "#0284c7", stroke: "#0369a1", "stroke-width": "1" }));
+      g.appendChild(elSVG("circle", { cx: 9.5, cy: 7.5, r: 1.8, fill: "#bae6fd" }));
+      g.appendChild(elSVG("circle", { cx: 0, cy: 0, r: 9.5, fill: "#ef4444", stroke: "#b91c1c", "stroke-width": "1.2" }));
+      g.appendChild(elSVG("circle", { cx: -3, cy: -3.2, r: 3.2, fill: "#fecaca", opacity: "0.85" }));
+      if (showLabel) {
+        const t = elSVG("text", { x: 17, y: 2, "font-size": "11", fill: "#0f172a", "font-weight": "700", stroke: "#ffffff", "stroke-width": "2.5", "paint-order": "stroke" });
+        t.textContent = "H₂O";
+        g.appendChild(t);
+      }
+      return g;
+    }
+
+    /** Chuyển giữa 3 tab mô phỏng chính */
+    function switchTab(tabId) {
+      activeTab = tabId;
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.id === tabId));
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        const isAct = b.dataset.tab === tabId;
+        b.classList.toggle("active", isAct);
+        b.setAttribute("aria-selected", String(isAct));
+      });
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    /** Chuyển chế độ Sáng (Đỏ - Trắng) / Tối thủ công */
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const root = document.documentElement;
+      const isDark = root.getAttribute("data-theme") === "dark";
+      root.setAttribute("data-theme", isDark ? "light" : "dark");
+    });
+
+    /* =====================================================================
+       PHÓNG TO TOÀN MÀN HÌNH MÔ PHỎNG (Hỗ trợ cả trình chiếu & điện thoại)
+       ===================================================================== */
+    let expandedStage = null;
+    let currentZoom = 1;
+    let zoomLabelsVisible = true;
+
+    /** Áp dụng mức thu phóng cho SVG trong khung đang mở rộng */
+    function applyZoomScale(scale) {
+      currentZoom = Math.max(0.6, Math.min(2.2, scale));
+      document.getElementById("zoomPercentVal").textContent = `${Math.round(currentZoom * 100)}%`;
+      if (expandedStage) {
+        const svg = expandedStage.querySelector("svg");
+        if (svg) svg.style.transform = `scale(${currentZoom})`;
+      }
+    }
+
+    /** Cập nhật trạng thái bật/tắt nhãn & kí hiệu trong chế độ phóng to */
+    function updateZoomLabelsState() {
+      const btn = document.getElementById("zoomToggleLabelsBtn");
+      if (expandedStage) {
+        expandedStage.classList.toggle("hide-sim-labels", !zoomLabelsVisible);
+      }
+      if (btn) {
+        btn.classList.toggle("btn-active", zoomLabelsVisible);
+        btn.textContent = zoomLabelsVisible ? "🏷️ Nhãn & kí hiệu: Bật" : "🏷️ Nhãn & kí hiệu: Tắt";
+      }
+    }
+
+    /** Mở chế độ phóng to toàn màn hình cho một khung mô phỏng (.svg-stage) */
+    function openStageZoom(stageEl) {
+      if (!stageEl) return;
+      if (expandedStage && expandedStage !== stageEl) closeStageZoom();
+      expandedStage = stageEl;
+      zoomLabelsVisible = true;
+      expandedStage.classList.add("is-expanded");
+      document.body.style.overflow = "hidden";
+
+      const svg = stageEl.querySelector("svg");
+      const title = (svg && svg.getAttribute("aria-label")) || "Phóng to mô phỏng";
+      document.getElementById("zoomToolbarTitle").textContent = `⛶ ${title}`;
+      document.getElementById("zoomToolbar").classList.add("active");
+      updateZoomLabelsState();
+      applyZoomScale(1);
+    }
+
+    /** Đóng chế độ phóng to mô phỏng */
+    function closeStageZoom() {
+      if (!expandedStage) return;
+      const svg = expandedStage.querySelector("svg");
+      if (svg) svg.style.transform = "";
+      expandedStage.classList.remove("is-expanded", "hide-sim-labels");
+      expandedStage = null;
+      zoomLabelsVisible = true;
+      document.body.style.overflow = "";
+      document.getElementById("zoomToolbar").classList.remove("active");
+    }
+
+    /** Gắn nút "⛶ Phóng to" vào góc trên phải của tất cả khung mô phỏng */
+    function initStageZoomButtons() {
+      document.querySelectorAll(".svg-stage").forEach(stage => {
+        if (stage.querySelector(".stage-zoom-btn")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "stage-zoom-btn";
+        btn.textContent = "⛶ Phóng to";
+        btn.title = "Phóng to mô phỏng này";
+        btn.addEventListener("click", () => openStageZoom(stage));
+        stage.appendChild(btn);
+      });
+    }
+
+    document.getElementById("fullscreenSimBtn").addEventListener("click", () => {
+      if (expandedStage) {
+        closeStageZoom();
+        return;
+      }
+      const panel = document.getElementById(activeTab);
+      if (!panel) return;
+      const stages = Array.from(panel.querySelectorAll(".svg-stage"));
+      const visibleStage = stages.find(s => window.getComputedStyle(s).display !== "none");
+      if (visibleStage) openStageZoom(visibleStage);
+    });
+
+    document.getElementById("zoomToggleLabelsBtn").addEventListener("click", () => {
+      zoomLabelsVisible = !zoomLabelsVisible;
+      updateZoomLabelsState();
+    });
+    document.getElementById("zoomInBtn").addEventListener("click", () => applyZoomScale(currentZoom + 0.2));
+    document.getElementById("zoomOutBtn").addEventListener("click", () => applyZoomScale(currentZoom - 0.2));
+    document.getElementById("zoomResetBtn").addEventListener("click", () => applyZoomScale(1));
+    document.getElementById("zoomCloseBtn").addEventListener("click", closeStageZoom);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && expandedStage) closeStageZoom();
+    });
+
+    /* =====================================================================
+       TAB 1: MÔ PHỎNG HẤP THỤ NƯỚC & KHOÁNG (TẾ BÀO LÔNG HÚT & CÂY THUỶ SINH)
+       ===================================================================== */
+    const tab1State = {
+      mode: "cell", // "cell" | "aquatic"
+      step: 1,
+      autoPlay: false,
+      autoTimer: 0,
+      particles: [],
+      aquaticParticles: [],
+      aquaticBubbles: [],
+      aquaticClock: 0
+    };
+
+    /** Vẽ tán cây thuỷ sinh (Rong đuôi chó) rậm rạp nhiều tầng lá vòng mảnh với ngọn sáng rực */
+    function buildAquaticPlants() {
+      const gBg = document.getElementById("t1AquaticPlantsBg");
+      const gFg = document.getElementById("t1AquaticPlantsFg");
+      if (!gBg || !gFg) return;
+      gBg.innerHTML = "";
+      gFg.innerHTML = "";
+
+      /** Vẽ một cành rong đuôi chó gồm thân giữa và các vòng lá mảnh xếp tầng */
+      function drawHornwortStem(parent, cfg) {
+        const stemG = elSVG("g");
+        const { xBase, yBase, height, lean, whorls, maxSpread, isBg } = cfg;
+
+        // Thân chính mềm mại
+        const xTop = xBase + lean;
+        const yTop = yBase - height;
+        stemG.appendChild(elSVG("path", {
+          d: `M ${xBase} ${yBase} Q ${xBase + lean * 0.45} ${yBase - height * 0.5} ${xTop} ${yTop}`,
+          fill: "none",
+          stroke: isBg ? "#14532d" : "url(#aqStemGrad)",
+          "stroke-width": isBg ? "4.5" : "5.5",
+          "stroke-linecap": "round"
+        }));
+
+        // Các tầng vòng lá mảnh xếp chồng từ gốc lên ngọn
+        for (let w = 0; w < whorls; w++) {
+          const t = w / (whorls - 1); // 0 = gốc, 1 = ngọn
+          const cx = xBase + lean * (0.45 * t + 0.55 * t * t);
+          const cy = yBase - height * t;
+          // Độ xòe lớn ở giữa thân, thu gọn dần thành búp sáng ở đỉnh ngọn
+          const spread = maxSpread * (t > 0.78 ? (1 - (t - 0.78) * 2.6) : (0.72 + 0.35 * Math.sin(t * Math.PI)));
+
+          // Màu lá chuyển từ xanh lục đậm ở gốc -> xanh lá mạ -> vàng kem sáng ở đỉnh ngọn
+          let leafColor = "#15803d";
+          if (isBg) {
+            leafColor = t > 0.75 ? "#4d7c0f" : t > 0.4 ? "#166534" : "#14532d";
+          } else {
+            leafColor = t > 0.88 ? "#fef9c3" : t > 0.72 ? "#d9f99d" : t > 0.48 ? "#84cc16" : t > 0.22 ? "#4d7c0f" : "#15803d";
+          }
+
+          const needles = isBg ? 10 : 14;
+          for (let n = 0; n < needles; n++) {
+            const side = n % 2 === 0 ? -1 : 1;
+            const layerIdx = Math.floor(n / 2);
+            const ratio = (layerIdx + 1) / (needles / 2);
+            const len = Math.max(12, spread * (0.52 + 0.55 * ratio));
+            const lift = 14 + (1 - ratio) * 24 + t * 18;
+            const ex = cx + side * len;
+            const ey = cy - lift;
+            const mx = cx + side * len * 0.55;
+            const my = cy + (ratio > 0.6 ? 7 : 2) - lift * 0.25;
+
+            stemG.appendChild(elSVG("path", {
+              d: `M ${cx.toFixed(1)} ${cy.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`,
+              fill: "none",
+              stroke: leafColor,
+              "stroke-width": t > 0.85 ? "2.6" : (isBg ? "2.4" : "3.1"),
+              "stroke-linecap": "round",
+              opacity: isBg ? "0.78" : "0.96"
+            }));
+          }
+        }
+
+        // Búp non sáng rực ở đỉnh ngọn giống ảnh mẫu
+        if (!isBg) {
+          stemG.appendChild(elSVG("ellipse", {
+            cx: xTop, cy: yTop - 6, rx: 16, ry: 22,
+            fill: "url(#aqTipGlow)", opacity: "0.82"
+          }));
+        }
+        parent.appendChild(stemG);
+      }
+
+      // 1. Lớp nền phía sau (6 bụi rậm tạo chiều sâu xanh thẫm)
+      [
+        { xBase: 165, yBase: 540, height: 470, lean: -18, whorls: 15, maxSpread: 82, isBg: true },
+        { xBase: 285, yBase: 540, height: 430, lean: 14,  whorls: 14, maxSpread: 78, isBg: true },
+        { xBase: 475, yBase: 540, height: 500, lean: -12, whorls: 16, maxSpread: 92, isBg: true },
+        { xBase: 585, yBase: 540, height: 455, lean: 16,  whorls: 15, maxSpread: 86, isBg: true },
+        { xBase: 790, yBase: 540, height: 485, lean: -20, whorls: 15, maxSpread: 88, isBg: true },
+        { xBase: 55,  yBase: 540, height: 390, lean: 12,  whorls: 13, maxSpread: 70, isBg: true }
+      ].forEach(c => drawHornwortStem(gBg, c));
+
+      // 2. Lớp chính phía trước (4 cụm rong đuôi chó tươi sáng, sắc nét)
+      [
+        { xBase: 92,  yBase: 540, height: 445, lean: -8,  whorls: 16, maxSpread: 78, isBg: false },
+        { xBase: 358, yBase: 540, height: 465, lean: 10,  whorls: 18, maxSpread: 102, isBg: false },
+        { xBase: 695, yBase: 540, height: 455, lean: 16,  whorls: 17, maxSpread: 105, isBg: false },
+        { xBase: 545, yBase: 540, height: 245, lean: -12, whorls: 10, maxSpread: 66, isBg: false }
+      ].forEach(c => drawHornwortStem(gFg, c));
+
+      // Cụm lá tròn nhỏ góc dưới bên trái (tạo điểm nhấn giống ảnh mẫu)
+      const cornerG = elSVG("g", { stroke: "#15803d", "stroke-width": "1.6", fill: "#bef264" });
+      [[22, 415], [46, 424], [18, 444], [52, 452], [26, 474], [58, 482]].forEach(([x, y]) => {
+        cornerG.appendChild(elSVG("ellipse", { cx: x, cy: y, rx: 16, ry: 7.5 }));
+      });
+      gFg.appendChild(cornerG);
+    }
+
+    /** Dựng đồ hoạ 3D sắc nét cho lát cắt tế bào vùng lông hút, vỏ rễ có cầu nối và nội bì */
+    function buildTab1CellAnatomy() {
+      const g = document.getElementById("t1TissueGrid");
+      if (!g) return;
+      g.innerHTML = "";
+
+      // Nền gian bào tối dưới lưới tế bào để tạo chiều sâu giữa các khe thành
+      g.appendChild(elSVG("rect", { x: 388, y: 0, width: 266, height: 540, fill: "#2e1a09" }));
+
+      /** Vẽ 1 tế bào đa giác 3D (thành nâu cam vát sáng, lòng vàng bóng có highlight, nhân hồng 3D) */
+      function drawPolyCell(outerPts, nucX, nucY, nucR = 9.5) {
+        const cx = outerPts.reduce((s, p) => s + p[0], 0) / outerPts.length;
+        const cy = outerPts.reduce((s, p) => s + p[1], 0) / outerPts.length;
+        // Thu nhỏ đa giác vào trong ~22% để làm lòng tế bào
+        const innerPts = outerPts.map(([x, y]) => [
+          cx + (x - cx) * 0.74,
+          cy + (y - cy) * 0.74
+        ]);
+        const outerStr = outerPts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+        const innerStr = innerPts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+
+        const cellG = elSVG("g");
+        // Thành tế bào ngoài
+        cellG.appendChild(elSVG("polygon", {
+          points: outerStr,
+          fill: "url(#c1_wallGrad)",
+          stroke: "#4a2c12",
+          "stroke-width": "2.4",
+          "stroke-linejoin": "round"
+        }));
+        // Mép vát sáng mặt cắt thành tế bào
+        cellG.appendChild(elSVG("polygon", {
+          points: innerStr,
+          fill: "url(#c1_parenchymaGrad)",
+          stroke: "#8c5b2b",
+          "stroke-width": "2.2",
+          "stroke-linejoin": "round"
+        }));
+        // Vệt phản sáng bóng trong lòng tế bào (góc trên-phải)
+        cellG.appendChild(elSVG("ellipse", {
+          cx: cx + 5, cy: cy - 10, rx: 11, ry: 5,
+          fill: "#ffffff", opacity: "0.34",
+          transform: `rotate(-18 ${(cx + 5).toFixed(1)} ${(cy - 10).toFixed(1)})`
+        }));
+        // Nhân tế bào hồng 3D kèm bóng đổ nhẹ
+        if (nucX !== null) {
+          cellG.appendChild(elSVG("circle", { cx: nucX + 1.5, cy: nucY + 2.5, r: nucR, fill: "#5c2d16", opacity: "0.35" }));
+          cellG.appendChild(elSVG("circle", { cx: nucX, cy: nucY, r: nucR, fill: "url(#c1_nucleusGrad)" }));
+        }
+        g.appendChild(cellG);
+      }
+
+      // 1. CỘT 1: LỚP TẾ BÀO NGOÀI (trừ hàng 3 là tế bào lông hút đặc biệt)
+      drawPolyCell([[392, 6], [444, 14], [442, 86], [392, 82]], 417, 50, 8.8);
+      drawPolyCell([[392, 88], [444, 94], [445, 174], [392, 170]], 418, 138, 9);
+
+      // TẾ BÀO LÔNG HÚT 3D vươn dài vào đất
+      const hairG = elSVG("g", { filter: "url(#c1_shadow)" });
+      hairG.appendChild(elSVG("path", {
+        d: "M 392 176 L 446 182 L 444 256 L 392 252 L 392 232 Q 290 227 194 214 Q 174 205 194 194 Q 294 205 392 197 Z",
+        fill: "url(#c1_wallGrad)", stroke: "#4a2c12", "stroke-width": "2.8", "stroke-linejoin": "round"
+      }));
+      hairG.appendChild(elSVG("path", {
+        d: "M 399 187 L 437 192 L 435 244 L 399 241 L 399 224 Q 295 220 202 208 Q 190 204 202 199 Q 295 210 399 203 Z",
+        fill: "url(#c1_parenchymaGrad)", stroke: "#8c5b2b", "stroke-width": "1.8"
+      }));
+      // Vệt sáng chạy dọc thân lông hút
+      hairG.appendChild(elSVG("path", {
+        d: "M 206 202 Q 298 212 394 206",
+        fill: "none", stroke: "#ffffff", "stroke-width": "2.4", "stroke-linecap": "round", opacity: "0.48"
+      }));
+      hairG.appendChild(elSVG("circle", { cx: 421.5, cy: 220.5, r: 9.8, fill: "#5c2d16", opacity: "0.35" }));
+      hairG.appendChild(elSVG("circle", { cx: 420, cy: 218, r: 9.8, fill: "url(#c1_nucleusGrad)" }));
+      g.appendChild(hairG);
+
+      drawPolyCell([[392, 258], [445, 264], [443, 344], [392, 340]], 417, 300, 9.2);
+      drawPolyCell([[392, 346], [445, 352], [443, 440], [392, 436]], 416, 398, 9.2);
+      drawPolyCell([[392, 442], [444, 448], [442, 534], [392, 530]], 417, 492, 8.8);
+
+      // 2. CỘT 2: TẾ BÀO VỎ RỄ LỚP NGOÀI (Đa giác lục giác khớp nhau chân thực)
+      drawPolyCell([[448, 4], [508, 10], [520, 52], [506, 94], [446, 86]], 478, 48, 9.5);
+      drawPolyCell([[447, 90], [506, 98], [524, 148], [510, 192], [447, 180]], 484, 144, 9.8);
+      drawPolyCell([[447, 186], [510, 196], [526, 244], [508, 288], [447, 274]], 484, 240, 10);
+      drawPolyCell([[446, 280], [508, 292], [524, 342], [508, 386], [446, 374]], 482, 332, 9.8);
+      drawPolyCell([[446, 380], [508, 390], [524, 440], [506, 482], [446, 472]], 480, 432, 9.8);
+      drawPolyCell([[446, 478], [506, 486], [516, 536], [446, 534]], 478, 514, 8.5);
+
+      // 3. CỘT 3: TẾ BÀO VỎ RỄ LỚP TRONG (Đa giác xen kẽ với cột 2)
+      drawPolyCell([[512, 6], [588, 12], [598, 62], [584, 104], [514, 96], [524, 52]], 556, 56, 9.8);
+      drawPolyCell([[514, 100], [584, 108], [600, 158], [586, 204], [516, 194], [528, 148]], 558, 154, 10);
+      drawPolyCell([[516, 198], [586, 208], [602, 260], [586, 312], [514, 290], [530, 244]], 558, 256, 10.4);
+      drawPolyCell([[514, 294], [586, 316], [600, 366], [584, 414], [514, 388], [528, 342]], 558, 358, 10);
+      drawPolyCell([[514, 392], [584, 418], [598, 468], [584, 516], [512, 484], [528, 440]], 556, 456, 9.8);
+
+      // 4. CẦU NỐI TẾ BÀO (PLASMODESMATA) xuyên qua thành giữa các tế bào vỏ rễ giống hình mẫu
+      const bridgeG = elSVG("g", { fill: "#d9b957", stroke: "#5c3917", "stroke-width": "1.6" });
+      [
+        [441, 218, 14, 9], [441, 312, 14, 9], [514, 142, 15, 9],
+        [516, 240, 16, 10], [514, 336, 15, 9], [588, 254, 15, 10],
+        [588, 356, 15, 10], [588, 156, 14, 9]
+      ].forEach(([x, y, w, h]) => {
+        bridgeG.appendChild(elSVG("rect", { x, y, width: w, height: h, rx: 3 }));
+      });
+      g.appendChild(bridgeG);
+
+      // 5. CỘT 4: LỚP NỘI BÌ 3D (lòng trắng bạc nổi khối + đai Caspary màu đỏ gạch ở vách ngang)
+      const endoY = [8, 96, 186, 278, 370, 460];
+      endoY.forEach(y => {
+        const eh = 82;
+        // Khung thành ngoài màu nâu hồng
+        g.appendChild(elSVG("rect", {
+          x: 600, y, width: 52, height: eh, rx: 11,
+          fill: "#c27c68", stroke: "#5c2e22", "stroke-width": "2.2"
+        }));
+        // Lòng tế bào nội bì trắng bạc 3D
+        g.appendChild(elSVG("rect", {
+          x: 608, y: y + 7, width: 38, height: eh - 14, rx: 8,
+          fill: "url(#c1_endoGrad)", stroke: "#94a3b8", "stroke-width": "1.4"
+        }));
+        // Đai Caspary màu đỏ gạch ở đỉnh/đáy thành ngăn
+        g.appendChild(elSVG("rect", { x: 612, y: y - 1, width: 28, height: 5, rx: 2, fill: "#b91c1c" }));
+        // Nhân hồng nhỏ bên trong nội bì
+        g.appendChild(elSVG("circle", { cx: 618, cy: y + eh / 2, r: 6.8, fill: "url(#c1_nucleusGrad)" }));
+      });
+    }
+
+    /** Khởi tạo hạt nước & ion khoáng cho Tab 1 */
+    function initTab1Particles() {
+      // 1. Dựng cấu trúc 3D tế bào lông hút & vỏ rễ, sau đó sinh 2 luồng hạt nước + khoáng
+      buildTab1CellAnatomy();
+      const gCell = document.getElementById("t1Particles");
+      gCell.innerHTML = "";
+      tab1State.particles = [];
+      for (let i = 0; i < 36; i++) {
+        const isWater = i % 5 !== 4;
+        const lane = i % 2; // 0: luồng trên, 1: luồng dưới
+        const grp = elSVG("g");
+        if (isWater) {
+          grp.appendChild(elSVG("circle", { r: "7.5", fill: "url(#c1_water3D)", stroke: "#e0f2fe", "stroke-width": "1.2" }));
+          if (i % 3 === 0) {
+            const t = elSVG("text", { x: 0, y: 2.6, "text-anchor": "middle", "font-size": "6.2", fill: "#ffffff", "font-weight": "700" });
+            t.textContent = "H₂O";
+            grp.appendChild(t);
+          }
+        } else {
+          grp.appendChild(elSVG("circle", { r: "8.2", fill: "url(#c1_mineral3D)", stroke: "#ffffff", "stroke-width": "1.4" }));
+          const t = elSVG("text", { x: 0, y: 2.8, "text-anchor": "middle", "font-size": "6.8", fill: "#ffffff", "font-weight": "700" });
+          t.textContent = "K⁺";
+          grp.appendChild(t);
+        }
+        gCell.appendChild(grp);
+        tab1State.particles.push({
+          el: grp,
+          lane,
+          progress: i / 36,
+          xylemOffset: ((i % 3) - 1) * 18,
+          jitter: ((i % 5) - 2) * 3.2
+        });
+      }
+
+      // 2. Cây thuỷ sinh + bọt khí + hạt nước & ion khoáng đi vào toàn bộ bề mặt thân và lá
+      buildAquaticPlants();
+
+      const gBub = document.getElementById("t1AquaticBubbles");
+      gBub.innerHTML = "";
+      tab1State.aquaticBubbles = [];
+      for (let i = 0; i < 14; i++) {
+        const r = 2.5 + (i % 4) * 1.3;
+        const c = elSVG("circle", { r, fill: "#e0f2fe", "fill-opacity": "0.45", stroke: "#ffffff", "stroke-width": "1" });
+        gBub.appendChild(c);
+        tab1State.aquaticBubbles.push({
+          el: c,
+          x: 65 + (i * 61) % 780,
+          y: 70 + (i * 43) % 420,
+          speed: 22 + (i % 5) * 9,
+          phase: i * 0.8
+        });
+      }
+
+      const gAq = document.getElementById("t1AquaticParticles");
+      gAq.innerHTML = "";
+      tab1State.aquaticParticles = [];
+      const targets = [
+        { sx: 210, sy: 135, tx: 315, ty: 165 }, { sx: 510, sy: 120, tx: 415, ty: 168 },
+        { sx: 215, sy: 270, tx: 325, ty: 280 }, { sx: 525, sy: 255, tx: 418, ty: 285 },
+        { sx: 230, sy: 395, tx: 335, ty: 388 }, { sx: 510, sy: 395, tx: 405, ty: 385 },
+        { sx: 560, sy: 155, tx: 655, ty: 185 }, { sx: 845, sy: 170, tx: 755, ty: 195 },
+        { sx: 565, sy: 315, tx: 665, ty: 315 }, { sx: 855, sy: 325, tx: 760, ty: 325 }
+      ];
+      targets.forEach((pt, idx) => {
+        const isWater = idx % 2 === 0;
+        const grp = elSVG("g");
+        if (isWater) {
+          grp.appendChild(createH2OMolecule(0.85, false));
+        } else {
+          grp.appendChild(elSVG("circle", { r: "11", fill: "#f59e0b", stroke: "#fff", "stroke-width": "1.8" }));
+          const t = elSVG("text", { x: 0, y: 3.5, "text-anchor": "middle", "font-size": "7.5", fill: "#fff", "font-weight": "700" });
+          t.textContent = "K⁺";
+          grp.appendChild(t);
+        }
+        gAq.appendChild(grp);
+        tab1State.aquaticParticles.push({ el: grp, ...pt, progress: (idx * 0.19) % 1 });
+      });
+    }
+
+    /** Cập nhật giao diện & nhận xét Tab 1 */
+    function updateTab1UI() {
+      document.getElementById("t1CellStage").style.display = tab1State.mode === "cell" ? "block" : "none";
+      document.getElementById("t1AquaticStage").style.display = tab1State.mode === "aquatic" ? "block" : "none";
+
+      document.getElementById("t1ViewCellBtn").classList.toggle("btn-active", tab1State.mode === "cell");
+      document.getElementById("t1ViewAquaticBtn").classList.toggle("btn-active", tab1State.mode === "aquatic");
+
+      for (let s = 1; s <= 4; s++) {
+        document.getElementById(`t1Highlight${s}`).setAttribute("opacity", tab1State.step === s ? "1" : "0");
+      }
+      document.querySelectorAll("#t1StepList .step-item").forEach(item => {
+        item.classList.toggle("active", Number(item.dataset.step) === tab1State.step);
+      });
+
+      const obs = document.getElementById("obsTab1Text");
+      if (tab1State.mode === "aquatic") {
+        obs.innerHTML = "<strong>Cây thuỷ sinh</strong> sống ngập trong nước nên nước và chất khoáng hoà tan được hấp thụ trực tiếp qua <strong>toàn bộ bề mặt biểu bì</strong> của thân và lá.";
+      } else {
+        const stepNotes = [
+          "",
+          "<strong>Bước 1:</strong> Nước (hạt xanh dương) và các ion khoáng hoà tan trong dung dịch đất bao quanh rễ.",
+          "<strong>Bước 2:</strong> Nước và chất khoáng đi vào <strong>lông hút</strong> (tế bào biểu bì kéo dài giúp tăng diện tích tiếp xúc với đất).",
+          "<strong>Bước 3:</strong> Nước và khoáng di chuyển theo <strong>đường dẫn tế bào</strong> xuyên qua các lớp <strong>tế bào vỏ rễ</strong>.",
+          "<strong>Bước 4:</strong> Nước và chất khoáng đi vào <strong>ống mạch gỗ</strong> ở trung tâm rễ rồi dâng lên thân và lá."
+        ];
+        obs.innerHTML = stepNotes[tab1State.step];
+      }
+    }
+
+    /** Hoạt hoạ Tab 1 (đường chảy uốn lượn qua lông hút -> nhu mô -> mạch gỗ) */
+    function animateTab1(dt) {
+      if (tab1State.mode === "aquatic") {
+        tab1State.aquaticClock += dt;
+        // Hạt H₂O & khoáng đi từ nước xung quanh vào toàn bộ bề mặt biểu bì lá và thân
+        tab1State.aquaticParticles.forEach(p => {
+          p.progress = (p.progress + dt * 0.34) % 1;
+          const x = p.sx + (p.tx - p.sx) * p.progress;
+          const y = p.sy + (p.ty - p.sy) * p.progress;
+          const fade = p.progress > 0.85 ? (1 - p.progress) / 0.15 : 1;
+          p.el.setAttribute("opacity", fade.toFixed(2));
+          p.el.setAttribute("transform", `translate(${x.toFixed(1)}, ${y.toFixed(1)})`);
+        });
+        // Bọt khí nhỏ nổi nhẹ lên mặt nước
+        tab1State.aquaticBubbles.forEach(b => {
+          b.y -= b.speed * dt;
+          if (b.y < 34) b.y = 515;
+          const bx = b.x + Math.sin(tab1State.aquaticClock * 2.2 + b.phase) * 6;
+          b.el.setAttribute("cx", bx.toFixed(1));
+          b.el.setAttribute("cy", b.y.toFixed(1));
+        });
+        // Hai chú cá Neon bơi nhẹ trong bể thuỷ sinh
+        const f1 = document.getElementById("t1NeonFish1");
+        if (f1) {
+          const fx1 = 655 + Math.sin(tab1State.aquaticClock * 0.7) * 28;
+          const fy1 = 395 + Math.cos(tab1State.aquaticClock * 1.1) * 9;
+          f1.setAttribute("transform", `translate(${fx1.toFixed(1)}, ${fy1.toFixed(1)})`);
+        }
+        const f2 = document.getElementById("t1NeonFish2");
+        if (f2) {
+          const fx2 = 105 + Math.cos(tab1State.aquaticClock * 0.6) * 22;
+          const fy2 = 118 + Math.sin(tab1State.aquaticClock * 1.2) * 8;
+          f2.setAttribute("transform", `translate(${fx2.toFixed(1)}, ${fy2.toFixed(1)}) scale(-0.85, 0.85)`);
+        }
+        return;
+      }
+
+      if (tab1State.autoPlay) {
+        tab1State.autoTimer += dt;
+        if (tab1State.autoTimer >= 2.6) {
+          tab1State.autoTimer = 0;
+          tab1State.step = (tab1State.step % 4) + 1;
+          updateTab1UI();
+        }
+      }
+
+      const speed = 0.16;
+      const laneTop = [
+        [40, 196], [186, 203], [312, 211], [418, 220], [478, 214],
+        [524, 246], [576, 278], [620, 254], [682, 286], [748, 338], [748, 12]
+      ];
+      const laneBot = [
+        [58, 214], [198, 212], [326, 219], [422, 232], [478, 266],
+        [528, 318], [582, 310], [634, 344], [692, 358], [776, 352], [776, 12]
+      ];
+
+      tab1State.particles.forEach(p => {
+        p.progress = (p.progress + dt * speed) % 1;
+        const pts = p.lane === 0 ? laneTop : laneBot;
+        const segFloat = p.progress * (pts.length - 1);
+        const idx = Math.min(pts.length - 2, Math.floor(segFloat));
+        const t = segFloat - idx;
+        const inXylem = idx >= pts.length - 2;
+        const x = pts[idx][0] + (pts[idx + 1][0] - pts[idx][0]) * t + (inXylem ? p.xylemOffset : 0);
+        const y = pts[idx][1] + (pts[idx + 1][1] - pts[idx][1]) * t + (inXylem ? 0 : p.jitter);
+        p.el.setAttribute("transform", `translate(${x.toFixed(1)}, ${y.toFixed(1)})`);
+      });
+    }
+
+    document.getElementById("t1ViewCellBtn").addEventListener("click", () => { tab1State.mode = "cell"; updateTab1UI(); });
+    document.getElementById("t1ViewAquaticBtn").addEventListener("click", () => { tab1State.mode = "aquatic"; updateTab1UI(); });
+    document.getElementById("t1AutoBtn").addEventListener("click", e => {
+      tab1State.autoPlay = !tab1State.autoPlay;
+      tab1State.autoTimer = 0;
+      e.target.textContent = tab1State.autoPlay ? "⏸ Tạm dừng" : "▶ Tự động";
+    });
+    document.getElementById("t1NextStepBtn").addEventListener("click", () => {
+      tab1State.autoPlay = false;
+      document.getElementById("t1AutoBtn").textContent = "▶ Tự động";
+      tab1State.step = (tab1State.step % 4) + 1;
+      updateTab1UI();
+    });
+    document.querySelectorAll("#t1StepList .step-item").forEach(item => {
+      item.addEventListener("click", () => { tab1State.step = Number(item.dataset.step); updateTab1UI(); });
+    });
+    document.getElementById("resetTab1").addEventListener("click", () => {
+      tab1State.mode = "cell";
+      tab1State.step = 1;
+      tab1State.autoPlay = false;
+      document.getElementById("t1AutoBtn").textContent = "▶ Tự động";
+      updateTab1UI();
+    });
+
+    /* =====================================================================
+       TAB 2: VẬN CHUYỂN + GÓC BÓ MẠCH + BẢNG 30.1
+       ===================================================================== */
+    const tab2State = {
+      mode: "overview", // "overview" | "bundle"
+      overviewParticles: [],
+      bundleParticles: []
+    };
+
+    /** Dựng lưới tế bào cơ bản & 2 hàng tầng phát sinh gỗ cho Góc cận cảnh bó mạch */
+    function buildTab2BundleAnatomy() {
+      // 1. Lưới tế bào cơ bản hai bên bó mạch
+      const gCells = document.getElementById("t2BundleCells");
+      gCells.innerHTML = "";
+      for (let row = 0; row < 15; row++) {
+        for (let col = 0; col < 5; col++) {
+          const cx = 152 + col * 26 + (row % 2) * 11;
+          const cy = 18 + row * 36;
+          gCells.appendChild(elSVG("ellipse", { cx, cy, rx: 12, ry: 15, fill: "#9fb575", stroke: "#485c30", "stroke-width": "1.6" }));
+          gCells.appendChild(elSVG("circle", { cx, cy, r: 3, fill: "#4b5563" }));
+        }
+        for (let col = 0; col < 10; col++) {
+          const cx = 576 + col * 34 + (row % 2) * 15;
+          const cy = 18 + row * 34;
+          if (cy > 480 - col * 8) continue;
+          gCells.appendChild(elSVG("ellipse", { cx, cy, rx: 16, ry: 15, fill: "#bfa373", stroke: "#5c4728", "stroke-width": "1.8" }));
+          gCells.appendChild(elSVG("circle", { cx, cy, r: 3.5, fill: "#574124" }));
+        }
+      }
+
+      // 2. Hai hàng tế bào tầng phát sinh gỗ (thượng tầng) màu trắng hồng
+      const gCam = document.getElementById("t2CambiumCells");
+      gCam.innerHTML = "";
+      for (let r = 0; r < 14; r++) {
+        const y = 4 + r * 36;
+        [420, 441].forEach((x, idx) => {
+          gCam.appendChild(elSVG("rect", {
+            x, y: y + idx * 14, width: 19, height: 33, rx: 4,
+            fill: "url(#b_cambiumGrad)", stroke: "#78716c", "stroke-width": "1.8"
+          }));
+          gCam.appendChild(elSVG("circle", { cx: x + 9.5, cy: y + idx * 14 + 16, r: 3.2, fill: "#d946ef", opacity: "0.7" }));
+        });
+      }
+    }
+
+    /** Khởi tạo hạt chuyển động cho Tab 2 */
+    function initTab2Particles() {
+      // 1. Sơ đồ toàn cây (theo Hình 30.2: Mạch gỗ màu đỏ đi lên, Mạch rây màu xanh dương đi xuống)
+      const gOv = document.getElementById("t2OverviewParticles");
+      gOv.innerHTML = "";
+      tab2State.overviewParticles = [];
+      for (let i = 0; i < 7; i++) {
+        const grp = elSVG("g");
+        const isWater = i % 3 !== 2;
+        if (isWater) {
+          grp.appendChild(elSVG("circle", { r: "7.5", fill: "#dc2626", stroke: "#ffffff", "stroke-width": "1.8" }));
+          const t = elSVG("text", { x: 0, y: 3, "text-anchor": "middle", "font-size": "6.5", fill: "#ffffff", "font-weight": "700" });
+          t.textContent = "H₂O";
+          grp.appendChild(t);
+        } else {
+          grp.appendChild(elSVG("circle", { r: "7.5", fill: "#f59e0b", stroke: "#ffffff", "stroke-width": "1.8" }));
+          const t = elSVG("text", { x: 0, y: 3, "text-anchor": "middle", "font-size": "7", fill: "#ffffff", "font-weight": "700" });
+          t.textContent = "K⁺";
+          grp.appendChild(t);
+        }
+        gOv.appendChild(grp);
+        tab2State.overviewParticles.push({ el: grp, type: "xylem", progress: i / 7 });
+      }
+      for (let i = 0; i < 6; i++) {
+        const grp = elSVG("g");
+        grp.appendChild(elSVG("rect", { x: "-10", y: "-7.5", width: "20", height: "15", rx: "7.5", fill: "#0284c7", stroke: "#ffffff", "stroke-width": "1.8" }));
+        const t = elSVG("text", { x: 0, y: 3, "text-anchor": "middle", "font-size": "7", fill: "#ffffff", "font-weight": "700" });
+        t.textContent = "CHC";
+        grp.appendChild(t);
+        gOv.appendChild(grp);
+        tab2State.overviewParticles.push({ el: grp, type: "phloem", progress: i / 6 });
+      }
+
+      // 2. Góc cận cảnh bó mạch (Mạch rây/Libe: CHC ↓ | Mạch gỗ: H₂O + K⁺ ↑)
+      buildTab2BundleAnatomy();
+      const gBu = document.getElementById("t2BundleParticles");
+      gBu.innerHTML = "";
+      tab2State.bundleParticles = [];
+
+      // Hạt chất hữu cơ (CHC) chảy xuống trong Mạch rây (Libe)
+      const phloemLanes = [302, 350, 398];
+      phloemLanes.forEach((lx, li) => {
+        for (let k = 0; k < 5; k++) {
+          const grp = elSVG("g");
+          grp.appendChild(elSVG("rect", { x: "-14", y: "-9.5", width: "28", height: "19", rx: "9.5", fill: "#e11d48", stroke: "#fef08a", "stroke-width": "1.6" }));
+          const t = elSVG("text", { x: 0, y: 3.5, "text-anchor": "middle", "font-size": "9.5", fill: "#ffffff", "font-weight": "700" });
+          t.textContent = "CHC";
+          grp.appendChild(t);
+          gBu.appendChild(grp);
+          tab2State.bundleParticles.push({ el: grp, type: "phloem", x: lx, progress: (k / 5 + li * 0.14) % 1 });
+        }
+      });
+
+      // Hạt nước (H₂O) và ion khoáng (K⁺) chảy lên trong Mạch gỗ
+      const xylemLanes = [476, 512, 546];
+      xylemLanes.forEach((lx, li) => {
+        for (let k = 0; k < 5; k++) {
+          const isWater = (k + li) % 3 !== 2;
+          const grp = elSVG("g");
+          if (isWater) {
+            grp.appendChild(elSVG("rect", { x: "-13.5", y: "-9.5", width: "27", height: "19", rx: "9.5", fill: "#0077ff", stroke: "#ffffff", "stroke-width": "1.5" }));
+            const t = elSVG("text", { x: 0, y: 3.5, "text-anchor": "middle", "font-size": "9.5", fill: "#ffffff", "font-weight": "700" });
+            t.textContent = "H₂O";
+            grp.appendChild(t);
+          } else {
+            grp.appendChild(elSVG("circle", { r: "10.5", fill: "#f59e0b", stroke: "#ffffff", "stroke-width": "1.6" }));
+            const t = elSVG("text", { x: 0, y: 3.5, "text-anchor": "middle", "font-size": "9.5", fill: "#ffffff", "font-weight": "700" });
+            t.textContent = "K⁺";
+            grp.appendChild(t);
+          }
+          gBu.appendChild(grp);
+          tab2State.bundleParticles.push({ el: grp, type: "xylem", x: lx, progress: (k / 5 + li * 0.17) % 1 });
+        }
+      });
+    }
+
+    /** Cập nhật giao diện Tab 2 */
+    function updateTab2UI() {
+      const m = tab2State.mode;
+      document.getElementById("t2OverviewStage").style.display = m === "overview" ? "block" : "none";
+      document.getElementById("t2BundleStage").style.display = m === "bundle" ? "block" : "none";
+
+      document.getElementById("t2CtrlOverview").style.display = m === "overview" ? "block" : "none";
+      document.getElementById("t2CtrlBundle").style.display = m === "bundle" ? "block" : "none";
+
+      document.querySelectorAll("[data-t2mode]").forEach(b => b.classList.toggle("btn-active", b.dataset.t2mode === m));
+
+      const legend = document.getElementById("t2LegendBar");
+      const obs = document.getElementById("obsTab2Text");
+      if (m === "overview") {
+        legend.innerHTML = `<span>━━ <strong style="color:#dc2626">Mạch gỗ ↑</strong> (Hình 30.2 - nét liền đỏ): Nước (H₂O) + chất khoáng</span><span>┄┄ <strong style="color:#0284c7">Mạch rây ↓</strong> (Hình 30.2 - nét đứt xanh): Chất hữu cơ (CHC)</span>`;
+        obs.innerHTML = "Quan sát <strong>Hình 30.2</strong>: Trong cây có hai dòng vận chuyển ngược chiều. <strong style='color:#dc2626'>Mạch gỗ (đường đỏ, nét liền ↑)</strong> vận chuyển nước và chất khoáng từ rễ lên thân, lá; <strong style='color:#0284c7'>Mạch rây (đường xanh, nét đứt ↓)</strong> vận chuyển chất hữu cơ do lá tổng hợp đi xuống nuôi thân và rễ.";
+      } else {
+        legend.innerHTML = `<span>━━ <strong style="color:var(--water)">Mạch gỗ ↑</strong>: H₂O (nước) + K⁺ (ion khoáng)</span><span>┄┄ <strong style="color:var(--phloem)">Mạch rây / Libe ↓</strong>: CHC (chất hữu cơ)</span>`;
+        obs.innerHTML = "<strong>Góc cắt dọc bó mạch trong thân:</strong> Các ống <strong style='color:var(--phloem)'>Mạch rây (Libe)</strong> nằm phía ngoài vận chuyển chất hữu cơ (<strong>CHC</strong>) đi xuống ↓; ở giữa là <strong>tầng phát sinh gỗ (thượng tầng)</strong>; bên trong là các ống <strong style='color:var(--water)'>Mạch gỗ</strong> vận chuyển nước (<strong>H₂O</strong>) và ion khoáng (<strong>K⁺</strong>) đi lên ↑.";
+      }
+    }
+
+    /** Hoạt hoạ Tab 2 */
+    function animateTab2(dt) {
+      if (tab2State.mode === "overview") {
+        const xylemPath = document.getElementById("t2XylemPath");
+        const phloemPath = document.getElementById("t2PhloemPath");
+        if (!xylemPath || !phloemPath) return;
+        const xLen = xylemPath.getTotalLength();
+        const pLen = phloemPath.getTotalLength();
+
+        tab2State.overviewParticles.forEach(p => {
+          p.progress = (p.progress + dt * (p.type === "xylem" ? 0.2 : 0.18)) % 1;
+          const pt = p.type === "xylem"
+            ? xylemPath.getPointAtLength(p.progress * xLen)
+            : phloemPath.getPointAtLength(p.progress * pLen);
+          p.el.setAttribute("transform", `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)})`);
+        });
+      } else if (tab2State.mode === "bundle") {
+        tab2State.bundleParticles.forEach(p => {
+          p.progress = (p.progress + dt * (p.type === "xylem" ? 0.28 : 0.19)) % 1;
+          const y = p.type === "xylem" ? 475 - p.progress * 415 : 58 + p.progress * 435;
+          p.el.setAttribute("transform", `translate(${p.x}, ${y.toFixed(1)})`);
+        });
+      }
+    }
+
+    document.querySelectorAll("[data-t2mode]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        tab2State.mode = btn.dataset.t2mode;
+        updateTab2UI();
+      });
+    });
+    document.getElementById("resetTab2").addEventListener("click", () => {
+      tab2State.mode = "overview";
+      updateTab2UI();
+    });
+
+    /* =====================================================================
+       TAB 3: KHÍ KHỔNG VÀ SỰ THOÁT HƠI NƯỚC (3 KÍNH LÚP PHÓNG ĐẠI)
+       ===================================================================== */
+    const tab3State = {
+      water: 80,
+      light: "bright",
+      aperture: 0.8,
+      gasParticles: [],
+      pullParticles: []
+    };
+
+    /** Khởi tạo hạt khí (H2O 3D, CO2, O2) và phân tử H2O 3D trong 2 kính lúp mạch gỗ & rễ */
+    function initTab3Particles() {
+      const gGas = document.getElementById("t3GasParticles");
+      gGas.innerHTML = "";
+      tab3State.gasParticles = [];
+
+      for (let i = 0; i < 5; i++) {
+        const g = elSVG("g");
+        g.appendChild(createH2OMolecule(0.75, false));
+        gGas.appendChild(g);
+        tab3State.gasParticles.push({ el: g, kind: "H2O", progress: i / 5, angle: -Math.PI / 2 + (i - 2) * 0.35 });
+      }
+      for (let i = 0; i < 4; i++) {
+        const g = elSVG("g");
+        g.appendChild(elSVG("polygon", { points: "0,-10 10,8 -10,8", fill: "#ea580c", stroke: "#fff", "stroke-width": "1.5" }));
+        const t = elSVG("text", { x: 0, y: 6, "text-anchor": "middle", "font-size": "6.5", fill: "#fff", "font-weight": "700" });
+        t.textContent = "CO₂";
+        g.appendChild(t);
+        gGas.appendChild(g);
+        tab3State.gasParticles.push({ el: g, kind: "CO2", progress: i / 4, angle: Math.PI / 2 + (i - 1.5) * 0.42 });
+      }
+      for (let i = 0; i < 4; i++) {
+        const g = elSVG("g");
+        g.appendChild(elSVG("rect", { x: "-9", y: "-9", width: "18", height: "18", rx: "3.5", fill: "#16a34a", stroke: "#fff", "stroke-width": "1.5" }));
+        const t = elSVG("text", { x: 0, y: 3.5, "text-anchor": "middle", "font-size": "8.5", fill: "#fff", "font-weight": "700" });
+        t.textContent = "O₂";
+        g.appendChild(t);
+        gGas.appendChild(g);
+        tab3State.gasParticles.push({ el: g, kind: "O2", progress: (i + 0.5) / 4, angle: -Math.PI / 2 + (i - 1.5) * 0.5 });
+      }
+
+      const gPull = document.getElementById("t3PullParticles");
+      gPull.innerHTML = "";
+      tab3State.pullParticles = [];
+      for (let i = 0; i < 4; i++) {
+        const g = elSVG("g");
+        g.appendChild(createH2OMolecule(1.15, true));
+        gPull.appendChild(g);
+        tab3State.pullParticles.push({ el: g, progress: i / 4, xOff: (i % 2 === 0 ? -16 : 8) });
+      }
+
+      const gRootLens = document.getElementById("t3RootLensMolecules");
+      gRootLens.innerHTML = "";
+      [{ x: 248, y: 468 }, { x: 232, y: 514 }, { x: 245, y: 560 }].forEach(pt => {
+        const wrap = elSVG("g", { transform: `translate(${pt.x}, ${pt.y})` });
+        wrap.appendChild(createH2OMolecule(1.05, true));
+        gRootLens.appendChild(wrap);
+      });
+    }
+
+    /** Cập nhật 2 tế bào hạt đậu, sóng hơi nước và nhiệt kế lá */
+    function updateTab3UI() {
+      const w = tab3State.water;
+      const lightFactor = tab3State.light === "bright" ? 1 : tab3State.light === "dim" ? 0.65 : 0.15;
+      const ap = Math.max(0, Math.min(1, (w / 100) * (0.35 + 0.65 * lightFactor)));
+      tab3State.aperture = ap;
+
+      const cx = 206, cy = 228, h = 92;
+      const innerGap = 2.5 + ap * 30;
+      const outerBulge = 52 + ap * 28;
+
+      document.getElementById("t3Pore").setAttribute("d",
+        `M ${cx} ${cy - h + 14} Q ${cx - innerGap * 1.45} ${cy} ${cx} ${cy + h - 14} Q ${cx + innerGap * 1.45} ${cy} ${cx} ${cy - h + 14} Z`);
+      document.getElementById("t3GuardL").setAttribute("d",
+        `M ${cx} ${cy - h} C ${cx - outerBulge} ${cy - h} ${cx - outerBulge} ${cy + h} ${cx} ${cy + h} Q ${cx - innerGap * 1.45} ${cy} ${cx} ${cy - h} Z`);
+      document.getElementById("t3InnerL").setAttribute("d",
+        `M ${cx - 2} ${cy - h + 13} Q ${cx - innerGap * 1.42} ${cy} ${cx - 2} ${cy + h - 13}`);
+      document.getElementById("t3GuardR").setAttribute("d",
+        `M ${cx} ${cy - h} C ${cx + outerBulge} ${cy - h} ${cx + outerBulge} ${cy + h} ${cx} ${cy + h} Q ${cx + innerGap * 1.45} ${cy} ${cx} ${cy - h} Z`);
+      document.getElementById("t3InnerR").setAttribute("d",
+        `M ${cx + 2} ${cy - h + 13} Q ${cx + innerGap * 1.42} ${cy} ${cx + 2} ${cy + h - 13}`);
+
+      const gChl = document.getElementById("t3Chloroplasts");
+      gChl.innerHTML = "";
+      [-42, -14, 14, 42].forEach(dy => {
+        const dx = 28 + ap * 14 - Math.abs(dy) * 0.22;
+        gChl.appendChild(elSVG("ellipse", { cx: cx - dx, cy: cy + dy, rx: 7.5, ry: 4.5 }));
+        gChl.appendChild(elSVG("ellipse", { cx: cx + dx, cy: cy + dy, rx: 7.5, ry: 4.5 }));
+      });
+
+      document.getElementById("t3VaporWaves").setAttribute("opacity", ap < 0.15 ? "0" : (0.25 + ap * 0.75).toFixed(2));
+      document.getElementById("t3WaterVal").textContent =
+        w < 25 ? `${w}% (Mất nước)` : w < 60 ? `${w}% (Trung bình)` : `${w}% (Trương nước)`;
+      document.getElementById("t3LightVal").textContent =
+        tab3State.light === "bright" ? "Sáng mạnh" : tab3State.light === "dim" ? "Râm mát" : "Tối";
+
+      const apPct = Math.round(ap * 100);
+      document.getElementById("t3ApertureBar").style.width = `${apPct}%`;
+      const apLabel = ap < 0.18 ? "Đang khép kín" : ap < 0.55 ? "Mở hé" : "Mở rộng";
+      document.getElementById("t3ApertureVal").textContent = `${apLabel} (${apPct}%)`;
+      document.getElementById("t3PoreLabel").textContent = `Khí khổng: ${apLabel}`;
+
+      const tempC = Math.round(39 - ap * 12);
+      const thermoH = Math.round(22 + (tempC - 26) * 4.4);
+      const thermoCol = tempC >= 35 ? "#ef4444" : tempC >= 31 ? "#f59e0b" : "#0ea5e9";
+      document.getElementById("t3ThermoFill").setAttribute("y", 142 - thermoH);
+      document.getElementById("t3ThermoFill").setAttribute("height", thermoH);
+      document.getElementById("t3ThermoFill").setAttribute("fill", thermoCol);
+      document.getElementById("t3ThermoBulb").setAttribute("fill", thermoCol);
+      document.getElementById("t3TempText").textContent = `${tempC >= 35 ? "Nóng" : tempC >= 31 ? "Ấm" : "Mát"} (~${tempC}°C)`;
+      document.getElementById("t3PullLabel").textContent =
+        ap < 0.18 ? "Lực kéo: Rất yếu" : ap < 0.55 ? "Lực kéo: Trung bình" : "Lực kéo: Mạnh ↑";
+
+      const obs = document.getElementById("obsTab3Text");
+      if (ap < 0.18) {
+        obs.innerHTML = "<strong>Khí khổng đang khép:</strong> Khi tế bào mất nước (hoặc trời tối), thành mỏng bớt căng → hai tế bào xẹp lại → lỗ khí khép kín để hạn chế mất nước. Lực kéo hút nước giảm mạnh và lá khó hạ nhiệt.";
+      } else if (tab3State.light === "dark") {
+        obs.innerHTML = "<strong>Trời tối:</strong> Khí khổng có xu hướng khép lại và <strong>không có O₂ thoát ra</strong> vì quang hợp không diễn ra khi thiếu ánh sáng.";
+      } else {
+        obs.innerHTML = "<strong>Khí khổng đang mở:</strong> Tế bào hạt đậu trương nước → <strong>thành ngoài mỏng căng nhiều hơn thành trong dày</strong> → hai tế bào cong ra làm lỗ khí mở. Hơi nước (H₂O) thoát ra giúp <strong>hạ nhiệt độ lá</strong> và <strong>tạo lực kéo hút nước từ rễ lên</strong>; đồng thời CO₂ đi vào cho quang hợp (và O₂ do quang hợp tạo ra đi ra).";
+      }
+    }
+
+    /** Hoạt hoạ Tab 3 */
+    function animateTab3(dt) {
+      const ap = tab3State.aperture;
+      const hasLight = tab3State.light !== "dark";
+
+      tab3State.gasParticles.forEach(p => {
+        const show = ap > 0.12 && (p.kind !== "O2" || hasLight);
+        p.el.setAttribute("opacity", show ? "1" : "0");
+        if (!show) return;
+        p.progress = (p.progress + dt * (0.2 + ap * 0.52)) % 1;
+        const dist = p.kind === "CO2" ? (1 - p.progress) * 120 : p.progress * 125;
+        const x = 206 + Math.cos(p.angle) * dist;
+        const y = 228 + Math.sin(p.angle) * dist;
+        p.el.setAttribute("transform", `translate(${x.toFixed(1)}, ${y.toFixed(1)})`);
+      });
+
+      const pullSpeed = 0.05 + ap * 0.65;
+      tab3State.pullParticles.forEach(p => {
+        p.progress = (p.progress + dt * pullSpeed) % 1;
+        const y = 472 - p.progress * 175;
+        p.el.setAttribute("transform", `translate(${732 + p.xOff}, ${y.toFixed(1)})`);
+      });
+    }
+
+    document.getElementById("t3Water").addEventListener("input", e => {
+      tab3State.water = Number(e.target.value);
+      updateTab3UI();
+    });
+    document.querySelectorAll("[data-t3light]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        tab3State.light = btn.dataset.t3light;
+        document.querySelectorAll("[data-t3light]").forEach(b => b.classList.remove("btn-active"));
+        btn.classList.add("btn-active");
+        if (tab3State.light === "dark" && tab3State.water > 30) {
+          tab3State.water = 20;
+          document.getElementById("t3Water").value = 20;
+        } else if (tab3State.light === "bright" && tab3State.water < 50) {
+          tab3State.water = 80;
+          document.getElementById("t3Water").value = 80;
+        }
+        updateTab3UI();
+      });
+    });
+    document.getElementById("resetTab3").addEventListener("click", () => {
+      tab3State.water = 80;
+      tab3State.light = "bright";
+      document.getElementById("t3Water").value = 80;
+      document.querySelectorAll("[data-t3light]").forEach(b => b.classList.toggle("btn-active", b.dataset.t3light === "bright"));
+      updateTab3UI();
+    });
+
+    /* =====================================================================
+       VÒNG LẶP HOẠT HOẠ CHÍNH (requestAnimationFrame)
+       ===================================================================== */
+    let lastTime = 0;
+    function mainLoop(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const dt = Math.min(0.08, (timestamp - lastTime) / 1000);
+      lastTime = timestamp;
+
+      if (activeTab === "tab1") animateTab1(dt);
+      else if (activeTab === "tab2") animateTab2(dt);
+      else if (activeTab === "tab3") animateTab3(dt);
+
+      requestAnimationFrame(mainLoop);
+    }
+
+    window.onload = function () {
+      initStageZoomButtons();
+
+      initTab1Particles();
+      updateTab1UI();
+
+      initTab2Particles();
+      updateTab2UI();
+
+      initTab3Particles();
+      updateTab3UI();
+
+      requestAnimationFrame(mainLoop);
+    };
+  </script>
+</body>
+</html>
